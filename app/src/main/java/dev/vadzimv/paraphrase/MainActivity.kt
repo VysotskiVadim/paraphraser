@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -39,12 +40,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(state: MainViewModel.State, actions: Actions) {
     Column(Modifier.padding(20.dp)) {
-        val text = when (state) {
-            MainViewModel.State.Empty -> "Please pick a text to paraphrase"
-            MainViewModel.State.Error -> "Error"
-            MainViewModel.State.Loading -> "Paraphrasing..."
-            is MainViewModel.State.Ready -> state.paraphrasedText
+        val primaryFontSize = 25.sp
+        val secondaryFontSize = 19.sp
+        when (state) {
+            MainViewModel.State.Empty -> {
+                Text(
+                    "Please pick a text to paraphrase. " +
+                        "Select any text in other app click Open AI paraphrase",
+                    fontSize = primaryFontSize
+                )
+            }
+            MainViewModel.State.Error -> Text("Error", fontSize = primaryFontSize)
+
+            MainViewModel.State.Loading -> Text("Paraphrasing...", fontSize = primaryFontSize)
+            is MainViewModel.State.Ready -> {
+                Text(text = "Initial text: ${state.initialText}", fontSize = secondaryFontSize)
+                Text(text = "Paraphrased:", fontSize = primaryFontSize)
+                Text(text = state.paraphrasedText, fontSize = primaryFontSize)
+                Button(onClick = { actions.copyText() }) {
+                    Text(text = "copy")
+                }
+            }
         }
-        Text(text = text, fontSize = 25.sp)
     }
 }
