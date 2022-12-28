@@ -29,8 +29,9 @@ class OpenAIParaphrasor : Paraphrasor {
         return withContext(Dispatchers.IO) {
             try {
                 val result = service.createCompletion(request)
+                val text = result.choices.first().text
                 ParaphraseResult.Success(
-                    result.choices.first().text
+                    text.trim()
                 )
             } catch (t: Throwable) {
                 ParaphraseResult.Error

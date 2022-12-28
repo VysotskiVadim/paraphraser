@@ -5,10 +5,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
 
@@ -23,17 +29,22 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             val state by viewModel.state.collectAsState()
-            MainScreen(state, viewModel)
+            Surface() {
+                MainScreen(state, viewModel)
+            }
         }
     }
 }
 
 @Composable
 fun MainScreen(state: MainViewModel.State, actions: Actions) {
-    when (state) {
-        MainViewModel.State.Empty -> Text("Please pick a text to paraphrase")
-        MainViewModel.State.Error -> Text("error")
-        MainViewModel.State.Loading -> Text("paraphrasing...")
-        is MainViewModel.State.Ready -> Text(state.paraphrasedText)
+    Column(Modifier.padding(20.dp)) {
+        val text = when (state) {
+            MainViewModel.State.Empty -> "Please pick a text to paraphrase"
+            MainViewModel.State.Error -> "Error"
+            MainViewModel.State.Loading -> "Paraphrasing..."
+            is MainViewModel.State.Ready -> state.paraphrasedText
+        }
+        Text(text = text, fontSize = 25.sp)
     }
 }
