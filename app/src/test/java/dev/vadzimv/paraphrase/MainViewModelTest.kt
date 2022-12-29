@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MainViewModelTest {
+
     @Test
     fun `initial state`() {
         val viewModel = createViewModel()
@@ -16,8 +17,11 @@ class MainViewModelTest {
 
     @Test
     fun `successfully paraphrasing`() {
+        val paraphrasor = StubParaphrasor().apply {
+            setResult("paraphrased")
+        }
         val viewModel = createViewModel(
-            paraphrasor = DummuParaphrasor()
+            paraphrasor = paraphrasor
         )
 
         viewModel.userSelectedTextToParaphrase("test")
@@ -32,8 +36,11 @@ class MainViewModelTest {
     @Test
     fun `copy results`() {
         val clipboard = FakePlainTextClipboard()
+        val paraphrasor = StubParaphrasor().apply {
+            setResult("paraphrased")
+        }
         val viewModel = createViewModel(
-            paraphrasor = DummuParaphrasor(),
+            paraphrasor = paraphrasor,
             clipboard = clipboard
         )
         viewModel.userSelectedTextToParaphrase("test")
@@ -45,7 +52,7 @@ class MainViewModelTest {
 }
 
 private fun createViewModel(
-    paraphrasor: Paraphrasor = DummuParaphrasor(),
+    paraphrasor: Paraphrasor = StubParaphrasor(),
     clipboard: Clipboard = FakePlainTextClipboard()
 ) = MainViewModel(
     paraphrasor = paraphrasor,
@@ -53,18 +60,19 @@ private fun createViewModel(
     clipboard = clipboard
 )
 
-class DummuParaphrasor : Paraphrasor {
+class StubParaphrasor : Paraphrasor {
+    private var result: ParaphraseResult = ParaphraseResult.Success("paraphrased")
+    fun setResult(paraphrasedText: String) {
+        this.result = ParaphraseResult.Success(paraphrasedText)
+    }
     override suspend fun paraphrase(phrase: String): ParaphraseResult {
-        return ParaphraseResult.Success("paraphrased")
+        return result
     }
 }
 
 class FakePlainTextClipboard: Clipboard {
-
     var value: String? = null
-
     override fun paste(text: String) {
         value = text
     }
-
 }
