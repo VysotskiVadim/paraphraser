@@ -1,5 +1,7 @@
 package dev.vadzimv.paraphrase
 
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Assert.assertEquals
@@ -12,25 +14,36 @@ class MainViewModelTest {
     fun `initial state`() {
         val viewModel = createViewModel()
         val state = viewModel.state.value
-        assertTrue("state is $state", state is MainViewModel.State.Empty,)
+        assertTrue("state is $state", state is MainViewModel.State.Empty)
     }
 
     @Test
     fun `successfully paraphrasing`() {
+        val paraphrasorWaitHandle = CompletableDeferred<Unit>()
         val paraphrasor = StubParaphrasor().apply {
             setResult("paraphrased")
+            setWaitHandle(paraphrasorWaitHandle)
         }
         val viewModel = createViewModel(
             paraphrasor = paraphrasor
         )
 
         viewModel.userSelectedTextToParaphrase("test")
+        val stateAfterTextSelection = viewModel.state.value
+        paraphrasorWaitHandle.complete(Unit)
+        val stateAfterParaphrasingCompleted = viewModel.state.value
 
-        val state = viewModel.state.value
-        assertTrue("state is $state", state is MainViewModel.State.Ready)
-        state as MainViewModel.State.Ready
-        assertEquals("paraphrased", state.paraphrasedText)
-        assertEquals("test", state.initialText)
+        assertTrue(
+            "state is $stateAfterTextSelection",
+            stateAfterTextSelection is MainViewModel.State.Loading
+        )
+        assertTrue(
+            "state is $stateAfterParaphrasingCompleted",
+            stateAfterParaphrasingCompleted is MainViewModel.State.Ready
+        )
+        stateAfterParaphrasingCompleted as MainViewModel.State.Ready
+        assertEquals("paraphrased", stateAfterParaphrasingCompleted.paraphrasedText)
+        assertEquals("test", stateAfterParaphrasingCompleted.initialText)
     }
 
     @Test
@@ -76,7 +89,9 @@ private fun createViewModel(
 )
 
 class StubParaphrasor : Paraphrasor {
+
     private var result: ParaphraseResult = ParaphraseResult.Success("paraphrased")
+    private var waitHandle: Deferred<Unit>? = null
 
     fun setResult(paraphrasedText: String) {
         this.result = ParaphraseResult.Success(paraphrasedText)
@@ -86,12 +101,17 @@ class StubParaphrasor : Paraphrasor {
         this.result = ParaphraseResult.Error
     }
 
+    fun setWaitHandle(handle: Deferred<Unit>) {
+        this.waitHandle = handle
+    }
+
     override suspend fun paraphrase(phrase: String): ParaphraseResult {
+        waitHandle?.await()
         return result
     }
 }
 
-class FakePlainTextClipboard: Clipboard {
+class FakePlainTextClipboard : Clipboard {
     var value: String? = null
     override fun paste(text: String) {
         value = text
