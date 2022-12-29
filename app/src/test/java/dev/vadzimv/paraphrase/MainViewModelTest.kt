@@ -49,6 +49,21 @@ class MainViewModelTest {
 
         assertEquals("paraphrased", clipboard.value)
     }
+
+    @Test
+    fun `error paraphrasing`() {
+        val paraphrasor = StubParaphrasor().apply {
+            setErrorResult()
+        }
+        val viewModel = createViewModel(
+            paraphrasor = paraphrasor
+        )
+
+        viewModel.userSelectedTextToParaphrase("test")
+
+        val state = viewModel.state.value
+        assertTrue("state is $state", state is MainViewModel.State.Error)
+    }
 }
 
 private fun createViewModel(
@@ -62,9 +77,15 @@ private fun createViewModel(
 
 class StubParaphrasor : Paraphrasor {
     private var result: ParaphraseResult = ParaphraseResult.Success("paraphrased")
+
     fun setResult(paraphrasedText: String) {
         this.result = ParaphraseResult.Success(paraphrasedText)
     }
+
+    fun setErrorResult() {
+        this.result = ParaphraseResult.Error
+    }
+
     override suspend fun paraphrase(phrase: String): ParaphraseResult {
         return result
     }
