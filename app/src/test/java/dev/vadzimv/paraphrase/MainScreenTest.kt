@@ -1,20 +1,27 @@
 package dev.vadzimv.paraphrase
 
+import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class MainViewModelTest {
+class MainScreenTest {
 
     @Test
     fun `initial state`() {
-        val viewModel = createViewModel()
-        val state = viewModel.state.value
-        assertTrue("state is $state", state is MainViewModel.State.Empty)
+        val store = createTestStore()
+        val state = store.state.value
+        assertTrue("state is $state", state is MainScreenState.Empty)
+    }
+
+    @Test
+    fun `paraphrasing null`() {
+        val store = createTestStore()
+        store.processAction(MainScreenAction.UserSelectedTextToParaphrase(null))
+        val state = store.state.value
+        assertTrue("state is $state", state is MainScreenState.Empty)
     }
 
     @Test
@@ -24,24 +31,24 @@ class MainViewModelTest {
             setResult("paraphrased")
             setWaitHandle(paraphrasorWaitHandle)
         }
-        val viewModel = createViewModel(
+        val store = createTestStore(
             paraphrasor = paraphrasor
         )
 
-        viewModel.userSelectedTextToParaphrase("test")
-        val stateAfterTextSelection = viewModel.state.value
+        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
+        val stateAfterTextSelection = store.state.value
         paraphrasorWaitHandle.complete(Unit)
-        val stateAfterParaphrasingCompleted = viewModel.state.value
+        val stateAfterParaphrasingCompleted = store.state.value
 
         assertTrue(
             "state is $stateAfterTextSelection",
-            stateAfterTextSelection is MainViewModel.State.Loading
+            stateAfterTextSelection is MainScreenState.Loading
         )
         assertTrue(
             "state is $stateAfterParaphrasingCompleted",
-            stateAfterParaphrasingCompleted is MainViewModel.State.Ready
+            stateAfterParaphrasingCompleted is MainScreenState.Ready
         )
-        stateAfterParaphrasingCompleted as MainViewModel.State.Ready
+        stateAfterParaphrasingCompleted as MainScreenState.Ready
         assertEquals("paraphrased", stateAfterParaphrasingCompleted.paraphrasedText)
         assertEquals("test", stateAfterParaphrasingCompleted.initialText)
     }
@@ -52,13 +59,13 @@ class MainViewModelTest {
         val paraphrasor = StubParaphrasor().apply {
             setResult("paraphrased")
         }
-        val viewModel = createViewModel(
+        val store = createTestStore(
             paraphrasor = paraphrasor,
             clipboard = clipboard
         )
-        viewModel.userSelectedTextToParaphrase("test")
 
-        viewModel.copyText()
+        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
+        store.processAction(MainScreenAction.CopyText)
 
         assertEquals("paraphrased", clipboard.value)
     }
@@ -68,25 +75,23 @@ class MainViewModelTest {
         val paraphrasor = StubParaphrasor().apply {
             setErrorResult()
         }
-        val viewModel = createViewModel(
+        val store = createTestStore(
             paraphrasor = paraphrasor
         )
 
-        viewModel.userSelectedTextToParaphrase("test")
+        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
 
-        val state = viewModel.state.value
-        assertTrue("state is $state", state is MainViewModel.State.Error)
+        val state = store.state.value
+        assertTrue("state is $state", state is MainScreenState.Error)
     }
 }
 
-private fun createViewModel(
+fun createTestStore(
     paraphrasor: Paraphrasor = StubParaphrasor(),
     clipboard: Clipboard = FakePlainTextClipboard()
-) = MainViewModel(
-    paraphrasor = paraphrasor,
-    scope = TestScope(UnconfinedTestDispatcher()),
-    clipboard = clipboard
-)
+): TestStore<MainScreenState, MainScreenAction> {
+    return TestStore(paraphrasor, clipboard) { it.mainScreenState }
+}
 
 class StubParaphrasor : Paraphrasor {
 
