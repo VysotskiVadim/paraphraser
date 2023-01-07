@@ -11,6 +11,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.theme.ParaphrasorTheme
 
 class MainActivity : ComponentActivity() {

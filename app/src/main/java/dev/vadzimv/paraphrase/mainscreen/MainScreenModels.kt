@@ -1,16 +1,21 @@
-package dev.vadzimv.paraphrase
+package dev.vadzimv.paraphrase.mainscreen
 
-import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.Clipboard
+import dev.vadzimv.paraphrase.ParaphraseResult
+import dev.vadzimv.paraphrase.Paraphrasor
 import dev.vadzimv.paraphrase.redux.abstractions.Action
+import dev.vadzimv.paraphrase.redux.abstractions.Effect
 import dev.vadzimv.paraphrase.redux.abstractions.Middleware
 import dev.vadzimv.paraphrase.redux.abstractions.Slice
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+typealias MainScreenSlice = Slice<MainScreenState, MainScreenAction, MainScreenEffect>
+
 fun createMainScreenSlice(
     paraphrasor: Paraphrasor,
     clipboard: Clipboard,
-) = Slice(
+): MainScreenSlice = Slice(
     initialState = MainScreenState.Empty,
     middleware = MainScreenMiddleware(paraphrasor, clipboard),
     reducer = ::mainScreenReducer
@@ -21,7 +26,7 @@ sealed interface MainScreenAction : Action {
     object CopyText : MainScreenAction
 }
 
-sealed interface MainScreenEffect {
+sealed interface MainScreenEffect : Effect {
     object ParaphrasingStarted : MainScreenEffect
     object ParaphrasingFailed : MainScreenEffect
     data class ParaphrasingCompleted(val initialText: String, val paraphrased: String) :
@@ -52,7 +57,7 @@ class MainScreenMiddleware(
                         emit(nextAction)
                     }
                 } else {
-                    flow {  }
+                    flow { }
                 }
             }
             is MainScreenAction.CopyText -> {

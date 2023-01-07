@@ -1,5 +1,7 @@
 package dev.vadzimv.paraphrase
 
+import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
+import dev.vadzimv.paraphrase.mainscreen.MainScreenEffect
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor

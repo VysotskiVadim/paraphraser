@@ -1,8 +1,9 @@
-package dev.vadzimv.paraphrase
+package dev.vadzimv.paraphrase.mainscreen
 
-import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.TestStore
+import dev.vadzimv.paraphrase.doubles.FakePlainTextClipboard
+import dev.vadzimv.paraphrase.doubles.StubParaphrasor
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -11,14 +12,14 @@ class MainScreenTest {
 
     @Test
     fun `initial state`() {
-        val store = createTestStore()
+        val store = createTestMainScreenSlice().toStore()
         val state = store.state.value
         assertTrue("state is $state", state is MainScreenState.Empty)
     }
 
     @Test
     fun `paraphrasing null`() {
-        val store = createTestStore()
+        val store = createTestMainScreenSlice().toStore()
         store.processAction(MainScreenAction.UserSelectedTextToParaphrase(null))
         val state = store.state.value
         assertTrue("state is $state", state is MainScreenState.Empty)
@@ -31,9 +32,9 @@ class MainScreenTest {
             setResult("paraphrased")
             setWaitHandle(paraphrasorWaitHandle)
         }
-        val store = createTestStore(
+        val store = createTestMainScreenSlice(
             paraphrasor = paraphrasor
-        )
+        ).toStore()
 
         store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
         val stateAfterTextSelection = store.state.value
@@ -59,10 +60,10 @@ class MainScreenTest {
         val paraphrasor = StubParaphrasor().apply {
             setResult("paraphrased")
         }
-        val store = createTestStore(
+        val store = createTestMainScreenSlice(
             paraphrasor = paraphrasor,
             clipboard = clipboard
-        )
+        ).toStore()
 
         store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
         store.processAction(MainScreenAction.CopyText)
@@ -75,9 +76,9 @@ class MainScreenTest {
         val paraphrasor = StubParaphrasor().apply {
             setErrorResult()
         }
-        val store = createTestStore(
+        val store = createTestMainScreenSlice(
             paraphrasor = paraphrasor
-        )
+        ).toStore()
 
         store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
 
@@ -86,39 +87,6 @@ class MainScreenTest {
     }
 }
 
-fun createTestStore(
-    paraphrasor: Paraphrasor = StubParaphrasor(),
-    clipboard: Clipboard = FakePlainTextClipboard()
-): TestStore<MainScreenState, MainScreenAction> {
-    return TestStore(paraphrasor, clipboard) { it.mainScreenState }
-}
-
-class StubParaphrasor : Paraphrasor {
-
-    private var result: ParaphraseResult = ParaphraseResult.Success("paraphrased")
-    private var waitHandle: Deferred<Unit>? = null
-
-    fun setResult(paraphrasedText: String) {
-        this.result = ParaphraseResult.Success(paraphrasedText)
-    }
-
-    fun setErrorResult() {
-        this.result = ParaphraseResult.Error
-    }
-
-    fun setWaitHandle(handle: Deferred<Unit>) {
-        this.waitHandle = handle
-    }
-
-    override suspend fun paraphrase(phrase: String): ParaphraseResult {
-        waitHandle?.await()
-        return result
-    }
-}
-
-class FakePlainTextClipboard : Clipboard {
-    var value: String? = null
-    override fun paste(text: String) {
-        value = text
-    }
-}
+fun MainScreenSlice.toStore() = TestStore<MainScreenState, MainScreenAction>(
+    mainScreenSlice = this
+) { it.mainScreenState }
