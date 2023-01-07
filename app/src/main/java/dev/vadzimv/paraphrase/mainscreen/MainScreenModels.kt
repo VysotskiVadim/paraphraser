@@ -6,7 +6,6 @@ import dev.vadzimv.paraphrase.redux.abstractions.Middleware
 import dev.vadzimv.paraphrase.redux.abstractions.Slice
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 fun createMainScreenSlice(
     paraphrasor: Paraphrasor,
@@ -19,31 +18,33 @@ fun createMainScreenSlice(
 
 sealed interface MainScreenAction : Action {
     data class UserSelectedTextToParaphrase(val text: String?) : MainScreenAction
-    object ParaphrasingStarted : MainScreenAction
-    object ParaphrasingFailed : MainScreenAction
-    data class ParaphrasingCompleted(val initialText: String, val paraphrased: String) :
-        MainScreenAction
-
     object CopyText : MainScreenAction
+}
+
+sealed interface MainScreenEffect {
+    object ParaphrasingStarted : MainScreenEffect
+    object ParaphrasingFailed : MainScreenEffect
+    data class ParaphrasingCompleted(val initialText: String, val paraphrased: String) :
+        MainScreenEffect
 }
 
 class MainScreenMiddleware(
     private val paraphrasor: Paraphrasor,
     private val clipboard: Clipboard
-) : Middleware<MainScreenState, MainScreenAction> {
+) : Middleware<MainScreenState, MainScreenAction, MainScreenEffect> {
     override fun processAction(
         state: MainScreenState,
         action: MainScreenAction
-    ): Flow<MainScreenAction> {
+    ): Flow<MainScreenEffect> {
         return when (action) {
             is MainScreenAction.UserSelectedTextToParaphrase -> {
                 if (action.text != null) {
                     flow {
-                        emit(MainScreenAction.ParaphrasingStarted)
+                        emit(MainScreenEffect.ParaphrasingStarted)
                         val nextAction =
                             when (val result = paraphrasor.paraphrase(action.text)) {
-                                ParaphraseResult.Error -> MainScreenAction.ParaphrasingFailed
-                                is ParaphraseResult.Success -> MainScreenAction.ParaphrasingCompleted(
+                                ParaphraseResult.Error -> MainScreenEffect.ParaphrasingFailed
+                                is ParaphraseResult.Success -> MainScreenEffect.ParaphrasingCompleted(
                                     action.text,
                                     result.paraphrased
                                 )
@@ -60,19 +61,18 @@ class MainScreenMiddleware(
                 }
                 flow { }
             }
-            else -> flowOf(action)
         }
     }
 }
 
-fun mainScreenReducer(state: MainScreenState, action: MainScreenAction): MainScreenState {
-    return when (action) {
-        is MainScreenAction.ParaphrasingStarted -> MainScreenState.Loading
-        is MainScreenAction.ParaphrasingCompleted -> MainScreenState.Ready(
-            initialText = action.initialText,
-            paraphrasedText = action.paraphrased
+fun mainScreenReducer(state: MainScreenState, effect: MainScreenEffect): MainScreenState {
+    return when (effect) {
+        is MainScreenEffect.ParaphrasingStarted -> MainScreenState.Loading
+        is MainScreenEffect.ParaphrasingCompleted -> MainScreenState.Ready(
+            initialText = effect.initialText,
+            paraphrasedText = effect.paraphrased
         )
-        is MainScreenAction.ParaphrasingFailed -> MainScreenState.Error
+        is MainScreenEffect.ParaphrasingFailed -> MainScreenState.Error
         else -> state
     }
 }

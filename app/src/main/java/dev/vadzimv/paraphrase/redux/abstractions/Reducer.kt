@@ -1,3 +1,3 @@
 package dev.vadzimv.paraphrase
 
-typealias Reducer<TState, TAction> = (TState, TAction) -> TState
+typealias Reducer<TState, TEffect> = (TState, TEffect) -> TState

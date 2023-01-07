@@ -2,8 +2,8 @@ package dev.vadzimv.paraphrase.redux.abstractions
 
 import dev.vadzimv.paraphrase.Reducer
 
-class Slice<TState, TAction: Action>(
+class Slice<TState, TAction: Action, TEffect>(
     val initialState: TState,
-    val middleware: Middleware<TState, TAction>,
-    val reducer: Reducer<TState, TAction>
+    val middleware: Middleware<TState, TAction, TEffect>,
+    val reducer: Reducer<TState, TEffect>
 )

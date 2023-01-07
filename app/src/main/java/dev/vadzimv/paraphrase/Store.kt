@@ -22,7 +22,7 @@ sealed interface NavigationState {
 
 class Store(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main),
-    private val mainScreenSlice: Slice<MainScreenState, MainScreenAction>
+    private val mainScreenSlice: Slice<MainScreenState, MainScreenAction, MainScreenEffect>
 ): ActionProcessor {
 
     private val _state = MutableStateFlow(
