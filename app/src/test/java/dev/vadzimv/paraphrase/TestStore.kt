@@ -2,6 +2,8 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.mainscreen.MainScreenSlice
 import dev.vadzimv.paraphrase.mainscreen.createTestMainScreenSlice
+import dev.vadzimv.paraphrase.mainscreen.createTestNavigationSlice
+import dev.vadzimv.paraphrase.navigation.NavigationSlice
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -11,12 +13,14 @@ import kotlinx.coroutines.test.TestCoroutineScope
 
 class TestStore<TState, TAction : Action>(
     mainScreenSlice: MainScreenSlice = createTestMainScreenSlice(),
-    val stateSelector: (AppState) -> TState,
-    ) {
+    navigationScreenSlice: NavigationSlice = createTestNavigationSlice(),
+    private val stateSelector: (AppState) -> TState,
+) {
 
     private val store = Store(
         scope = TestCoroutineScope(),
-        mainScreenSlice
+        mainScreenSlice,
+        navigationScreenSlice
     )
 
     val state

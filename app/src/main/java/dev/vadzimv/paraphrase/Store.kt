@@ -2,7 +2,10 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.mainscreen.MainScreenEffect
+import dev.vadzimv.paraphrase.mainscreen.MainScreenSlice
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.navigation.NavigationSlice
+import dev.vadzimv.paraphrase.navigation.NavigationState
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
 import dev.vadzimv.paraphrase.redux.abstractions.Slice
@@ -18,18 +21,15 @@ data class AppState(
     val mainScreenState: MainScreenState
 )
 
-sealed interface NavigationState {
-    object MainScreen : NavigationState
-}
-
 class Store(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main),
-    private val mainScreenSlice: Slice<MainScreenState, MainScreenAction, MainScreenEffect>
+    private val mainScreenSlice: MainScreenSlice,
+    private val navigationSlice: NavigationSlice
 ): ActionProcessor {
 
     private val _state = MutableStateFlow(
         AppState(
-            navigationState = NavigationState.MainScreen,
+            navigationState = navigationSlice.initialState,
             mainScreenState = mainScreenSlice.initialState
         )
     )
