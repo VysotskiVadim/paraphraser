@@ -4,6 +4,7 @@ import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.mainscreen.MainScreenEffect
 import dev.vadzimv.paraphrase.mainscreen.MainScreenSlice
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationSlice
 import dev.vadzimv.paraphrase.navigation.NavigationState
 import dev.vadzimv.paraphrase.redux.abstractions.Action
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 data class AppState(
@@ -41,6 +43,9 @@ class Store(
             when (action) {
                 is MainScreenAction -> mainScreenSlice.middleware.processAction(_state.value.mainScreenState, action).collect {
                     _state.value = _state.value.copy(mainScreenState = mainScreenSlice.reducer(_state.value.mainScreenState, it))
+                }
+                is NavigationAction -> navigationSlice.middleware.processAction(_state.value.navigationState, action).collect {
+                    _state.value = _state.value.copy(navigationState = navigationSlice.reducer(_state.value.navigationState, it))
                 }
             }
         }

@@ -17,11 +17,12 @@ class NavigationTest {
     }
 
     @Test
-    @Ignore("TODO: implement")
-    fun `go to settings screen `() {
+    fun `go to settings screen and back`() {
         val store = createTestNavigationSlice().toStore()
         store.processAction(NavigationAction.OpenSettings)
         assertEquals(Screen.Settings, store.state.value.currentScreen)
+        store.processAction(NavigationAction.Back)
+        assertEquals(Screen.Main, store.state.value.currentScreen)
     }
 }
 

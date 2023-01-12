@@ -30,9 +30,14 @@ sealed interface NavigationAction : Action, Effect {
 }
 
 
-fun navigationReducer(state: NavigationState, effect: NavigationAction): NavigationState {
-    return state
-}
+fun navigationReducer(state: NavigationState, effect: NavigationAction): NavigationState =
+    when (effect) {
+        NavigationAction.Back -> when (state.currentScreen) {
+            Screen.Main -> state
+            Screen.Settings -> state.copy(currentScreen = Screen.Main)
+        }
+        NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings)
+    }
 
 class NavigationMiddleware : Middleware<NavigationState, NavigationAction, NavigationAction> {
     override fun processAction(
