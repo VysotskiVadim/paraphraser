@@ -11,12 +11,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
 
 @Composable
 fun MainScreen(state: MainScreenState, actionProcessor: ActionProcessor) {
     Column(Modifier.padding(20.dp)) {
+        Button(onClick = { actionProcessor.processAction(NavigationAction.OpenSettings) }) {
+            Text(text = "Settings")
+        }
+
         val primaryFontSize = 25.sp
         val secondaryFontSize = 17.sp
         when (state) {

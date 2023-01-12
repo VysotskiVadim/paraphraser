@@ -10,13 +10,14 @@ import kotlinx.coroutines.flow.flowOf
 typealias NavigationSlice = Slice<NavigationState, NavigationAction, NavigationAction>
 
 fun createNavigationSlice() = Slice(
-    NavigationState(Screen.Main),
+    NavigationState(Screen.Main, false),
     NavigationMiddleware(),
     ::navigationReducer
 )
 
 data class NavigationState(
-    val currentScreen: Screen
+    val currentScreen: Screen,
+    val handleBackButton: Boolean
 )
 
 sealed interface Screen {
@@ -34,9 +35,9 @@ fun navigationReducer(state: NavigationState, effect: NavigationAction): Navigat
     when (effect) {
         NavigationAction.Back -> when (state.currentScreen) {
             Screen.Main -> state
-            Screen.Settings -> state.copy(currentScreen = Screen.Main)
+            Screen.Settings -> state.copy(currentScreen = Screen.Main, handleBackButton = false)
         }
-        NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings)
+        NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
     }
 
 class NavigationMiddleware : Middleware<NavigationState, NavigationAction, NavigationAction> {
