@@ -1,8 +1,9 @@
 package dev.vadzimv.paraphrase.mainscreen
 
 import dev.vadzimv.paraphrase.Clipboard
-import dev.vadzimv.paraphrase.ParaphraseResult
-import dev.vadzimv.paraphrase.Paraphrasor
+import dev.vadzimv.paraphrase.ChatResponse
+import dev.vadzimv.paraphrase.Chat
+import dev.vadzimv.paraphrase.ChatRequest
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.Effect
 import dev.vadzimv.paraphrase.redux.abstractions.Middleware
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 typealias MainScreenSlice = Slice<MainScreenState, MainScreenAction, MainScreenEffect>
 
 fun createMainScreenSlice(
-    paraphrasor: Paraphrasor,
+    paraphrasor: Chat,
     clipboard: Clipboard,
 ): MainScreenSlice = Slice(
     initialState = MainScreenState.Empty,
@@ -34,7 +35,7 @@ sealed interface MainScreenEffect : Effect {
 }
 
 class MainScreenMiddleware(
-    private val paraphrasor: Paraphrasor,
+    private val chat: Chat,
     private val clipboard: Clipboard
 ) : Middleware<MainScreenState, MainScreenAction, MainScreenEffect> {
     override fun processAction(
@@ -47,11 +48,13 @@ class MainScreenMiddleware(
                     flow {
                         emit(MainScreenEffect.ParaphrasingStarted)
                         val nextAction =
-                            when (val result = paraphrasor.paraphrase(action.text)) {
-                                ParaphraseResult.Error -> MainScreenEffect.ParaphrasingFailed
-                                is ParaphraseResult.Success -> MainScreenEffect.ParaphrasingCompleted(
+                            when (val result = chat.request(ChatRequest(
+                                text = "paraphrase: \"${action.text}\""
+                            ))) {
+                                ChatResponse.Error -> MainScreenEffect.ParaphrasingFailed
+                                is ChatResponse.Success -> MainScreenEffect.ParaphrasingCompleted(
                                     action.text,
-                                    result.paraphrased
+                                    result.reply
                                 )
                             }
                         emit(nextAction)

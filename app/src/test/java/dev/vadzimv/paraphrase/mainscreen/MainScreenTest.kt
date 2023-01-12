@@ -2,7 +2,7 @@ package dev.vadzimv.paraphrase.mainscreen
 
 import dev.vadzimv.paraphrase.TestStore
 import dev.vadzimv.paraphrase.doubles.FakePlainTextClipboard
-import dev.vadzimv.paraphrase.doubles.StubParaphrasor
+import dev.vadzimv.paraphrase.doubles.StubChat
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -28,7 +28,7 @@ class MainScreenTest {
     @Test
     fun `successfully paraphrasing`() {
         val paraphrasorWaitHandle = CompletableDeferred<Unit>()
-        val paraphrasor = StubParaphrasor().apply {
+        val paraphrasor = StubChat().apply {
             setResult("paraphrased")
             setWaitHandle(paraphrasorWaitHandle)
         }
@@ -57,7 +57,7 @@ class MainScreenTest {
     @Test
     fun `copy results`() {
         val clipboard = FakePlainTextClipboard()
-        val paraphrasor = StubParaphrasor().apply {
+        val paraphrasor = StubChat().apply {
             setResult("paraphrased")
         }
         val store = createTestMainScreenSlice(
@@ -73,7 +73,7 @@ class MainScreenTest {
 
     @Test
     fun `error paraphrasing`() {
-        val paraphrasor = StubParaphrasor().apply {
+        val paraphrasor = StubChat().apply {
             setErrorResult()
         }
         val store = createTestMainScreenSlice(
