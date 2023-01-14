@@ -1,8 +1,10 @@
-package dev.vadzimv.paraphrase.mainscreen
+package dev.vadzimv.paraphrase
 
-import dev.vadzimv.paraphrase.TestStore
 import dev.vadzimv.paraphrase.doubles.FakePlainTextClipboard
 import dev.vadzimv.paraphrase.doubles.StubChat
+import dev.vadzimv.paraphrase.mainscreen.*
+import dev.vadzimv.paraphrase.mainscreen.createMainScreenSlice
+import dev.vadzimv.paraphrase.navigation.createNavigationSlice
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -90,3 +92,13 @@ class MainScreenTest {
 fun MainScreenSlice.toStore() = TestStore<MainScreenState, MainScreenAction>(
     mainScreenSlice = this
 ) { it.mainScreenState }
+
+fun createTestMainScreenSlice(
+    paraphrasor: Chat = StubChat(),
+    clipboard: Clipboard = FakePlainTextClipboard()
+) = createMainScreenSlice(
+    paraphrasor = paraphrasor,
+    clipboard = clipboard,
+)
+
+fun createTestNavigationSlice() = createNavigationSlice()

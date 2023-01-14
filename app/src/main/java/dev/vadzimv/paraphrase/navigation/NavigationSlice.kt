@@ -2,16 +2,14 @@ package dev.vadzimv.paraphrase.navigation
 
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.Effect
-import dev.vadzimv.paraphrase.redux.abstractions.Middleware
+import dev.vadzimv.paraphrase.redux.abstractions.ForwardingMiddleware
 import dev.vadzimv.paraphrase.redux.abstractions.Slice
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 typealias NavigationSlice = Slice<NavigationState, NavigationAction, NavigationAction>
 
 fun createNavigationSlice() = Slice(
     NavigationState(Screen.Main, false),
-    NavigationMiddleware(),
+    ForwardingMiddleware(),
     ::navigationReducer
 )
 
@@ -39,12 +37,3 @@ fun navigationReducer(state: NavigationState, effect: NavigationAction): Navigat
         }
         NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
     }
-
-class NavigationMiddleware : Middleware<NavigationState, NavigationAction, NavigationAction> {
-    override fun processAction(
-        state: NavigationState,
-        action: NavigationAction
-    ): Flow<NavigationAction> {
-        return flowOf(action)
-    }
-}

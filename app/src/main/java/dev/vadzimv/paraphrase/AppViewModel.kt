@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vadzimv.paraphrase.mainscreen.createMainScreenSlice
 import dev.vadzimv.paraphrase.navigation.createNavigationSlice
+import dev.vadzimv.paraphrase.settings.createSettingsSlice
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     val store = Store(
@@ -13,6 +14,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             OpenAIParaphrasor(),
             AndroidClipboard(application)
         ),
-        createNavigationSlice()
+        createNavigationSlice(),
+        createSettingsSlice()
     )
 }

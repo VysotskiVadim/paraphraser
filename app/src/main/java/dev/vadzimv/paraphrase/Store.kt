@@ -10,6 +10,8 @@ import dev.vadzimv.paraphrase.navigation.NavigationState
 import dev.vadzimv.paraphrase.redux.abstractions.Action
 import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
 import dev.vadzimv.paraphrase.redux.abstractions.Slice
+import dev.vadzimv.paraphrase.settings.SettingsSlice
+import dev.vadzimv.paraphrase.settings.SettingsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,19 +22,22 @@ import kotlinx.coroutines.launch
 
 data class AppState(
     val navigationState: NavigationState,
-    val mainScreenState: MainScreenState
+    val mainScreenState: MainScreenState,
+    val settingsState: SettingsState,
 )
 
 class Store(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main),
     private val mainScreenSlice: MainScreenSlice,
-    private val navigationSlice: NavigationSlice
+    private val navigationSlice: NavigationSlice,
+    private val settingsSlice: SettingsSlice
 ): ActionProcessor {
 
     private val _state = MutableStateFlow(
         AppState(
             navigationState = navigationSlice.initialState,
-            mainScreenState = mainScreenSlice.initialState
+            mainScreenState = mainScreenSlice.initialState,
+            settingsState = settingsSlice.initialState
         )
     )
     val state: StateFlow<AppState> get() = _state

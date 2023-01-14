@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.mainscreen
+package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.TestStore
 import dev.vadzimv.paraphrase.navigation.NavigationAction
