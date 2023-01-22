@@ -1,5 +1,6 @@
-package dev.vadzimv.paraphrase.redux.abstractions
+package dev.vadzimv.paraphrase.redux.deprecated
 
+import dev.vadzimv.paraphrase.redux.Action
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 

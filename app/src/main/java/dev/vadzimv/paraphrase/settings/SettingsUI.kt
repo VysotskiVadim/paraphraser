@@ -3,7 +3,7 @@ package dev.vadzimv.paraphrase.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
+import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
 
 @Composable
 fun SettingsUI(settingsState: SettingsState, actionProcessor: ActionProcessor) {

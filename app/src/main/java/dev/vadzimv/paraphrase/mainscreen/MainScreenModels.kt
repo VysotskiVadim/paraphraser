@@ -4,10 +4,10 @@ import dev.vadzimv.paraphrase.Clipboard
 import dev.vadzimv.paraphrase.ChatResponse
 import dev.vadzimv.paraphrase.Chat
 import dev.vadzimv.paraphrase.ChatRequest
-import dev.vadzimv.paraphrase.redux.abstractions.Action
-import dev.vadzimv.paraphrase.redux.abstractions.Effect
-import dev.vadzimv.paraphrase.redux.abstractions.Middleware
-import dev.vadzimv.paraphrase.redux.abstractions.Slice
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.deprecated.Effect
+import dev.vadzimv.paraphrase.redux.deprecated.Middleware
+import dev.vadzimv.paraphrase.redux.deprecated.Slice
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -22,7 +22,7 @@ fun createMainScreenSlice(
     reducer = ::mainScreenReducer
 )
 
-sealed interface MainScreenAction : Action {
+sealed interface MainScreenAction : dev.vadzimv.paraphrase.redux.Action {
     data class UserSelectedTextToParaphrase(val text: String?) : MainScreenAction
     object CopyText : MainScreenAction
 }

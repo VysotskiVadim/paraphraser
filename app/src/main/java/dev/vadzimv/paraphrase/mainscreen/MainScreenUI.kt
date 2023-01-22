@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.sp
 import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationAction
-import dev.vadzimv.paraphrase.redux.abstractions.Action
-import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
 
 @Composable
 fun MainScreen(state: MainScreenState, actionProcessor: ActionProcessor) {
@@ -59,7 +59,7 @@ fun readyStatePreview() = MainScreen(
         "paraphrased test"
     ),
     actionProcessor = object : ActionProcessor {
-        override fun processAction(action: Action) {
+        override fun processAction(action: dev.vadzimv.paraphrase.redux.Action) {
         }
     }
 )

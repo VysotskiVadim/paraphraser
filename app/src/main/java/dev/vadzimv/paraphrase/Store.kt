@@ -1,15 +1,13 @@
 package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreen.MainScreenEffect
 import dev.vadzimv.paraphrase.mainscreen.MainScreenSlice
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationSlice
 import dev.vadzimv.paraphrase.navigation.NavigationState
-import dev.vadzimv.paraphrase.redux.abstractions.Action
-import dev.vadzimv.paraphrase.redux.abstractions.ActionProcessor
-import dev.vadzimv.paraphrase.redux.abstractions.Slice
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
 import dev.vadzimv.paraphrase.settings.SettingsSlice
 import dev.vadzimv.paraphrase.settings.SettingsState
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 data class AppState(
@@ -43,7 +40,7 @@ class Store(
     val state: StateFlow<AppState> get() = _state
 
 
-    override fun processAction(action: Action) {
+    override fun processAction(action: dev.vadzimv.paraphrase.redux.Action) {
         scope.launch {
             when (action) {
                 is MainScreenAction -> mainScreenSlice.middleware.processAction(_state.value.mainScreenState, action).collect {

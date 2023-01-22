@@ -1,9 +1,9 @@
 package dev.vadzimv.paraphrase.navigation
 
-import dev.vadzimv.paraphrase.redux.abstractions.Action
-import dev.vadzimv.paraphrase.redux.abstractions.Effect
-import dev.vadzimv.paraphrase.redux.abstractions.ForwardingMiddleware
-import dev.vadzimv.paraphrase.redux.abstractions.Slice
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.deprecated.Effect
+import dev.vadzimv.paraphrase.redux.deprecated.ForwardingMiddleware
+import dev.vadzimv.paraphrase.redux.deprecated.Slice
 
 typealias NavigationSlice = Slice<NavigationState, NavigationAction, NavigationAction>
 
@@ -23,7 +23,7 @@ sealed interface Screen {
     object Main : Screen
 }
 
-sealed interface NavigationAction : Action, Effect {
+sealed interface NavigationAction : dev.vadzimv.paraphrase.redux.Action, Effect {
     object OpenSettings : NavigationAction
     object Back : NavigationAction
 }
