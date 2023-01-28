@@ -9,7 +9,9 @@ class Store<TState>(
     private var _state: TState = initialState
     val state: TState get() = _state
 
-    fun <TSubState> addSlice(
+    var dispatcher: (Action) -> Unit = { this.rootDispatcher(it) }
+
+    fun <TSubState> addReducer(
         reducer: Reducer<TSubState>,
         subStateSelector: (TState) -> TSubState,
         updater: (TState, TSubState) -> TState
@@ -20,7 +22,15 @@ class Store<TState>(
     }
 
     override fun dispatch(action: Action) {
+        dispatcher(action)
+    }
+
+    private fun rootDispatcher(action: Action) {
         _state = reducers.fold(state) { state, reducer -> reducer(state, action) }
+    }
+
+    fun addMiddleware(middleware: Middleware<TState>) {
+        dispatcher = middleware(this)(dispatcher)
     }
 }
 
