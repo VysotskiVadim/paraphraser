@@ -33,4 +33,3 @@ class Store<TState>(
         dispatcher = middleware(this)(dispatcher)
     }
 }
-

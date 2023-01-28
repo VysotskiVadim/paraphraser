@@ -2,8 +2,11 @@ package dev.vadzimv.paraphrase.redux
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.Locale
 
 internal class StoreTest {
+
+
     @Test
     fun `reducer updates state on event`() {
         val store = Store(TestState(subState1 = SubState1(1)))
@@ -55,14 +58,3 @@ internal class StoreTest {
     }
 }
 
-data class TestState(
-    val subState1: SubState1 = SubState1()
-)
-
-
-data class SubState1(val test: Int = 8)
-object Add1Action: Action
-fun reducer1(state: SubState1, action: Action) = when (action) {
-    Add1Action -> state.copy(test = state.test + 1)
-    else -> state
-}
