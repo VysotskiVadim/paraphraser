@@ -1,32 +1,21 @@
 package dev.vadzimv.paraphrase.redux
 
 class Store<TState>(
-    initialState: TState
+    initialState: TState,
+    private val reducer: Reducer<TState>
 ): Dispatcher {
-
-    private val reducers = mutableListOf<Reducer<TState>>()
 
     private var _state: TState = initialState
     val state: TState get() = _state
 
     var dispatcher: (Action) -> Unit = { this.rootDispatcher(it) }
 
-    fun <TSubState> addReducer(
-        reducer: Reducer<TSubState>,
-        subStateSelector: (TState) -> TSubState,
-        updater: (TState, TSubState) -> TState
-    ) {
-        reducers.add { state, action ->
-            updater(state, reducer(subStateSelector(state), action))
-        }
-    }
-
     override fun dispatch(action: Action) {
         dispatcher(action)
     }
 
     private fun rootDispatcher(action: Action) {
-        _state = reducers.fold(state) { state, reducer -> reducer(state, action) }
+        _state = reducer(_state, action)
     }
 
     fun addMiddleware(middleware: Middleware<TState>) {

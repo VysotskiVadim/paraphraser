@@ -20,3 +20,17 @@ fun reducer2(state2: SubState2, action: Action) = when (action) {
     ToUpperCaseAction -> state2.copy(test = state2.test.uppercase(Locale.getDefault()))
     else -> state2
 }
+
+fun combineTestReducers(): Reducer<TestState> =
+    combineReducers {
+        reducer(
+            ::reducer1,
+            subStateSelector = { s -> s.subState1 },
+            updater = { rootState, subState -> rootState.copy(subState1 = subState) }
+        )
+        reducer(
+            ::reducer2,
+            subStateSelector = { s -> s.subState2 },
+            updater = { rootState, subState -> rootState.copy(subState2 = subState) }
+        )
+    }

@@ -6,18 +6,7 @@ import org.junit.Test
 class CombineReducersTest {
     @Test
     fun `combine reducers`() {
-        val reducer: Reducer<TestState> = combineReducers {
-            reducer(
-                ::reducer1,
-                subStateSelector = { s -> s.subState1 },
-                updater = { rootState, subState -> rootState.copy(subState1 = subState) }
-            )
-            reducer(
-                ::reducer2,
-                subStateSelector = { s -> s.subState2 },
-                updater = { rootState, subState -> rootState.copy(subState2 = subState) }
-            )
-        }
+        val reducer: Reducer<TestState> = combineTestReducers()
         val testState = TestState(
             subState1 = SubState1(1),
             subState2 = SubState2("test")
