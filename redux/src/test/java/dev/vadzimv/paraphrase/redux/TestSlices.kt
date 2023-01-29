@@ -18,8 +18,10 @@ fun reducer1(state: SubState1, action: Action) = when (action) {
 
 data class SubState2(val test: String = "test")
 object ToUpperCaseAction: Action
+data class SetTestValue(val value: String): Action
 fun reducer2(state2: SubState2, action: Action) = when (action) {
     ToUpperCaseAction -> state2.copy(test = state2.test.uppercase(Locale.getDefault()))
+    is SetTestValue -> state2.copy(test = action.value)
     else -> state2
 }
 

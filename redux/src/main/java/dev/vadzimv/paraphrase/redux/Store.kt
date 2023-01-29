@@ -20,7 +20,7 @@ class Store<TState>(
     }
 
     private fun setMiddlewares(middlewares: List<Middleware<TState>>) {
-        middlewares.forEach {
+        middlewares.reversed().forEach {
             dispatcher = it(this)(dispatcher)
         }
     }

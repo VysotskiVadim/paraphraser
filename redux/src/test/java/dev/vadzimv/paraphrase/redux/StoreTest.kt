@@ -35,14 +35,43 @@ internal class StoreTest {
         val store = Store(
             TestState(subState1 = SubState1(1)),
             combineTestReducers(),
-            middlewares = listOf { _ ->
-                { _ ->
-                    { _ ->
-                    }
-                }
-            })
+            middlewares = listOf(createAllEventsFilteringMiddleware())
+        )
         store.dispatch(Add1Action)
         assertEquals(1, store.state.subState1.test)
+    }
+
+    @Test
+    fun `logging happens before filtering`() {
+        val loggedActions = mutableListOf<Action>()
+        val store = Store(
+            TestState(subState1 = SubState1(0)),
+            combineTestReducers(),
+            middlewares = listOf(
+                { _ ->
+                    { next ->
+                        { action ->
+                            loggedActions.add(action)
+                            next.dispatch(action)   //TODO: replace by next(action)
+                        }
+                    }
+                },
+                createAllEventsFilteringMiddleware()
+            )
+        )
+
+        store.dispatch(Add1Action)
+        store.dispatch(ToUpperCaseAction)
+
+        assertEquals(0, store.state.subState1.test)
+        assertEquals(listOf(Add1Action, ToUpperCaseAction), loggedActions)
+    }
+
+    private fun createAllEventsFilteringMiddleware() = { _: Store<TestState> ->
+        { _ : Dispatcher ->
+            { _ : Action ->
+            }
+        }
     }
 }
 
