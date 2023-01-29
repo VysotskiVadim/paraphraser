@@ -4,18 +4,18 @@ class Store<TState>(
     initialState: TState,
     private val reducer: Reducer<TState>,
     middlewares: List<Middleware<TState>> = listOf()
-): Dispatcher {
+) {
 
     private var _state: TState = initialState
     val state: TState get() = _state
 
-    private var dispatcher: (Action) -> Unit = { action -> _state = reducer(_state, action) }
+    private var dispatcher: Dispatcher = { action -> _state = reducer(_state, action) }
 
     init {
         setMiddlewares(middlewares)
     }
 
-    override fun dispatch(action: Action) {
+    fun dispatch(action: Action) {
         dispatcher(action)
     }
 

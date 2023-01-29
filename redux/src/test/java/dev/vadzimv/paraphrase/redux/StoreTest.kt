@@ -20,8 +20,8 @@ internal class StoreTest {
             middlewares = listOf { _ ->
                 { next ->
                     { action ->
-                        next.dispatch(action)
-                        next.dispatch(action)
+                        next(action)
+                        next(action)
                     }
                 }
             }
@@ -52,7 +52,7 @@ internal class StoreTest {
                     { next ->
                         { action ->
                             loggedActions.add(action)
-                            next.dispatch(action)   //TODO: replace by next(action)
+                            next(action)
                         }
                     }
                 },
