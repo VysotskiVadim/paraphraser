@@ -5,7 +5,7 @@ import org.junit.Test
 
 class CombineReducersTest {
     @Test
-    fun `combine reducers`() {
+    fun `combine test reducers`() {
         val reducer: Reducer<TestState> = combineTestReducers()
         val testState = TestState(
             subState1 = SubState1(1),

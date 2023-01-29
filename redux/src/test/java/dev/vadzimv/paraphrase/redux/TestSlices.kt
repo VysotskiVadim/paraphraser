@@ -22,15 +22,9 @@ fun reducer2(state2: SubState2, action: Action) = when (action) {
 }
 
 fun combineTestReducers(): Reducer<TestState> =
-    combineReducers {
-        reducer(
-            ::reducer1,
-            subStateSelector = { s -> s.subState1 },
-            updater = { rootState, subState -> rootState.copy(subState1 = subState) }
-        )
-        reducer(
-            ::reducer2,
-            subStateSelector = { s -> s.subState2 },
-            updater = { rootState, subState -> rootState.copy(subState2 = subState) }
+    { state, action ->
+        state.copy(
+            subState1 = reducer1(state.subState1, action),
+            subState2 = reducer2(state.subState2, action)
         )
     }
