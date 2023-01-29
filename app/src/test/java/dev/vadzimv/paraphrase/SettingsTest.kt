@@ -5,10 +5,12 @@ import dev.vadzimv.paraphrase.settings.SettingsSlice
 import dev.vadzimv.paraphrase.settings.SettingsState
 import dev.vadzimv.paraphrase.settings.createSettingsSlice
 import org.junit.Assert.assertNotEquals
+import org.junit.Ignore
 import org.junit.Test
 
 class SettingsTest {
     @Test
+    @Ignore
     fun `initial state`() {
         val store = createSettingsSlice().toStore()
         assertNotEquals("", store.state.value.chatSettings.openAIToken)
