@@ -1,6 +1,7 @@
 package dev.vadzimv.paraphrase.redux
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 internal class StoreTest {
@@ -67,11 +68,45 @@ internal class StoreTest {
         assertEquals(listOf(Add1Action, ToUpperCaseAction), loggedActions)
     }
 
-    private fun createAllEventsFilteringMiddleware() = { _: Store<TestState> ->
-        { _ : Dispatcher ->
-            { _ : Action ->
-            }
+    @Test
+    fun `register observer`() {
+        val store = Store(
+            TestState(subState1 = SubState1(0)),
+            combineTestReducers()
+        )
+
+        var latestState: TestState? = null
+        store.registerStateObserver {
+            latestState = it
         }
+        assertNull(latestState)
+        store.dispatch(Add1Action)
+
+        assertEquals(1, latestState?.subState1?.test)
+    }
+
+    @Test
+    fun `unregister observer`() {
+        val store = Store(
+            TestState(subState1 = SubState1(0)),
+            combineTestReducers()
+        )
+        var latestState: TestState? = null
+        val observer: StateObserver<TestState> = {
+            latestState = it
+        }
+        store.registerStateObserver(observer)
+
+        store.unregisterStateObserver(observer)
+        store.dispatch(Add1Action)
+
+        assertNull(latestState)
     }
 }
 
+private fun createAllEventsFilteringMiddleware() = { _: Store<TestState> ->
+    { _ : Dispatcher ->
+        { _ : Action ->
+        }
+    }
+}
