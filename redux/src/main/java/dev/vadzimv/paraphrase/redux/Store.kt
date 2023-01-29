@@ -12,16 +12,16 @@ class Store<TState>(
     private var dispatcher: (Action) -> Unit = { action -> _state = reducer(_state, action) }
 
     init {
-        middlewares.forEach {
-            addMiddleware(it)
-        }
+        setMiddlewares(middlewares)
     }
 
     override fun dispatch(action: Action) {
         dispatcher(action)
     }
 
-    private fun addMiddleware(middleware: Middleware<TState>) {
-        dispatcher = middleware(this)(dispatcher)
+    private fun setMiddlewares(middlewares: List<Middleware<TState>>) {
+        middlewares.forEach {
+            dispatcher = it(this)(dispatcher)
+        }
     }
 }
