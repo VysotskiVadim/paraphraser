@@ -8,13 +8,8 @@ import dev.vadzimv.paraphrase.navigation.createNavigationSlice
 import dev.vadzimv.paraphrase.settings.createSettingsSlice
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
-    val store = Store(
-        scope = viewModelScope,
-        createMainScreenSlice(
-            OpenAIParaphrasor(),
-            AndroidClipboard(application)
-        ),
-        createNavigationSlice(),
-        createSettingsSlice()
+    val store = createStore(
+        chat = OpenAIParaphrasor(),
+        clipboard = AndroidClipboard(application)
     )
 }

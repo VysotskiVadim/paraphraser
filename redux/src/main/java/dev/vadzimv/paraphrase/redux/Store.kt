@@ -1,5 +1,7 @@
 package dev.vadzimv.paraphrase.redux
 
+import java.util.concurrent.CopyOnWriteArrayList
+
 typealias StateObserver<TState> = (TState) -> Unit
 
 class Store<TState>(
@@ -8,12 +10,12 @@ class Store<TState>(
     middlewares: List<Middleware<TState>> = listOf()
 ) {
 
-    private var stateObserver: StateObserver<TState> = { }
+    private var observers = CopyOnWriteArrayList<StateObserver<TState>>()
 
     private var _state: TState = initialState
         set(value) {
             field = value
-            stateObserver(value)
+            observers.forEach { it(value) }
         }
     val state: TState get() = _state
 
@@ -28,13 +30,11 @@ class Store<TState>(
     }
 
     fun registerStateObserver(observer: (TState) -> Unit) {
-        stateObserver = observer
+        observers.add(observer)
     }
 
     fun unregisterStateObserver(observer: (TState) -> Unit) {
-        if (stateObserver == observer) {
-            stateObserver = { }
-        }
+        observers.remove(observer)
     }
 
     private fun setMiddlewares(middlewares: List<Middleware<TState>>) {

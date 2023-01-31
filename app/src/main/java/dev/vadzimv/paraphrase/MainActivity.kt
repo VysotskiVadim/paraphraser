@@ -16,7 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationUI
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.Store
 import dev.vadzimv.paraphrase.theme.ParaphrasorTheme
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -28,17 +33,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (intent.action == Intent.ACTION_PROCESS_TEXT) {
             val text = intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
-            store.processAction(MainScreenAction.UserSelectedTextToParaphrase(text))
+            store.dispatch(MainScreenAction.UserSelectedTextToParaphrase(text))
         }
         handBackPress()
         setContent {
             ParaphrasorTheme {
-                val state by store.state.collectAsState()
+                val state by store.flowableState().collectAsState(store.state)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavigationUI(state, store)
+                    NavigationUI(state) { action: Action ->
+                        store.dispatch(action)
+                    }
                 }
             }
         }
@@ -47,14 +54,25 @@ class MainActivity : ComponentActivity() {
     private fun handBackPress() {
         val callback:OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                store.processAction(NavigationAction.Back)
+                store.dispatch(NavigationAction.Back)
             }
         }
         onBackPressedDispatcher.addCallback(callback)
         lifecycleScope.launch {
-            store.state.collect {
+            store.flowableState().onStart { emit(store.state) }.collect {
                 callback.isEnabled = it.navigationState.handleBackButton
             }
         }
+    }
+}
+
+private fun Store<AppState>.flowableState() = callbackFlow<AppState> {
+    val observer = { state: AppState ->
+        this.trySend(state)
+        Unit
+    }
+    this@flowableState.registerStateObserver(observer)
+    awaitClose {
+        this@flowableState.unregisterStateObserver(observer)
     }
 }
