@@ -65,11 +65,11 @@ class MainScreenTest {
     @Test
     fun `copy results`() {
         val clipboard = FakePlainTextClipboard()
-        val paraphrasor = StubChat().apply {
+        val chat = StubChat().apply {
             setResult("paraphrased")
         }
         val store = createTestStore(
-            chat = paraphrasor,
+            chat = chat,
             clipboard = clipboard
         )
 
@@ -81,16 +81,16 @@ class MainScreenTest {
 
     @Test
     fun `error paraphrasing`() {
-        val paraphrasor = StubChat().apply {
+        val chat = StubChat().apply {
             setErrorResult()
         }
-        val store = createTestMainScreenSlice(
-            paraphrasor = paraphrasor
-        ).toStore()
+        val store = createTestStore(
+            chat = chat
+        )
 
-        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
+        store.dispatch(MainScreenAction.UserSelectedTextToParaphrase("test"))
 
-        val state = store.state.value
+        val state = store.state.mainScreenStateSelector()
         assertTrue("state is $state", state is MainScreenState.Error)
     }
 }
