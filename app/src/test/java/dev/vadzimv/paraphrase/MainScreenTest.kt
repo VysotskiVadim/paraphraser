@@ -2,9 +2,15 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.doubles.FakePlainTextClipboard
 import dev.vadzimv.paraphrase.doubles.StubChat
-import dev.vadzimv.paraphrase.mainscreen.*
-import dev.vadzimv.paraphrase.mainscreen.createMainScreenSlice
+import dev.vadzimv.paraphrase.mainscreen.mainScreenMiddleware
+import dev.vadzimv.paraphrase.mainscreen.mainScreenReducer
+import dev.vadzimv.paraphrase.mainscreen.mainScreenStateSelector
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenSlice
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
+import dev.vadzimv.paraphrase.mainscreendeprecated.createMainScreenSlice
 import dev.vadzimv.paraphrase.navigation.createNavigationSlice
+import dev.vadzimv.paraphrase.settings.createSettingsSlice
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -14,34 +20,34 @@ class MainScreenTest {
 
     @Test
     fun `initial state`() {
-        val store = createTestMainScreenSlice().toStore()
-        val state = store.state.value
+        val store = createTestStore()
+        val state = store.state.mainScreenStateSelector()
         assertTrue("state is $state", state is MainScreenState.Empty)
     }
 
     @Test
     fun `paraphrasing null`() {
-        val store = createTestMainScreenSlice().toStore()
-        store.processAction(MainScreenAction.UserSelectedTextToParaphrase(null))
-        val state = store.state.value
+        val store = createTestStore()
+        store.dispatch(MainScreenAction.UserSelectedTextToParaphrase(null))
+        val state = store.state.mainScreenStateSelector()
         assertTrue("state is $state", state is MainScreenState.Empty)
     }
 
     @Test
     fun `successfully paraphrasing`() {
-        val paraphrasorWaitHandle = CompletableDeferred<Unit>()
-        val paraphrasor = StubChat().apply {
+        val chatWaitHandle = CompletableDeferred<Unit>()
+        val stubChat = StubChat().apply {
             setResult("paraphrased")
-            setWaitHandle(paraphrasorWaitHandle)
+            setWaitHandle(chatWaitHandle)
         }
-        val store = createTestMainScreenSlice(
-            paraphrasor = paraphrasor
-        ).toStore()
+        val store = createTestStore(
+            chat = stubChat
+        )
 
-        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
-        val stateAfterTextSelection = store.state.value
-        paraphrasorWaitHandle.complete(Unit)
-        val stateAfterParaphrasingCompleted = store.state.value
+        store.dispatch(MainScreenAction.UserSelectedTextToParaphrase("test"))
+        val stateAfterTextSelection = store.state.mainScreenStateSelector()
+        chatWaitHandle.complete(Unit)
+        val stateAfterParaphrasingCompleted = store.state.mainScreenStateSelector()
 
         assertTrue(
             "state is $stateAfterTextSelection",
@@ -89,6 +95,25 @@ class MainScreenTest {
     }
 }
 
+fun createTestStore(
+    chat: Chat = StubChat()
+) = dev.vadzimv.paraphrase.redux.Store<AppState>(
+    AppState(
+        createNavigationSlice().initialState,
+        MainScreenState.Empty,
+        createSettingsSlice().initialState
+    ),
+    { state, action ->
+        state.copy(
+            mainScreenState = mainScreenReducer(state.mainScreenState, action)
+        )
+    },
+    listOf(
+        mainScreenMiddleware(chat)
+    )
+)
+
+//TODO: remove
 fun MainScreenSlice.toStore() = TestStore<MainScreenState, MainScreenAction>(
     mainScreenSlice = this
 ) { it.mainScreenState }

@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.mainscreen
+package dev.vadzimv.paraphrase.mainscreendeprecated
 
 import dev.vadzimv.paraphrase.Clipboard
 import dev.vadzimv.paraphrase.ChatResponse
@@ -27,7 +27,7 @@ sealed interface MainScreenAction : dev.vadzimv.paraphrase.redux.Action {
     object CopyText : MainScreenAction
 }
 
-sealed interface MainScreenEffect : Effect {
+sealed interface MainScreenEffect : Action, Effect {
     object ParaphrasingStarted : MainScreenEffect
     object ParaphrasingFailed : MainScreenEffect
     data class ParaphrasingCompleted(val initialText: String, val paraphrased: String) :

@@ -1,12 +1,11 @@
 package dev.vadzimv.paraphrase
 
-import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreen.MainScreenSlice
-import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenSlice
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationSlice
 import dev.vadzimv.paraphrase.navigation.NavigationState
-import dev.vadzimv.paraphrase.redux.Action
 import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
 import dev.vadzimv.paraphrase.settings.SettingsSlice
 import dev.vadzimv.paraphrase.settings.SettingsState

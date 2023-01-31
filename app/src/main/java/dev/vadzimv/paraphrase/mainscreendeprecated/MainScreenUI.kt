@@ -9,10 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreen.MainScreenState
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
+import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationAction
-import dev.vadzimv.paraphrase.redux.Action
 import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
 
 @Composable

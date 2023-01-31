@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.mainscreen
+package dev.vadzimv.paraphrase.mainscreendeprecated
 
 sealed interface MainScreenState {
     object Empty : MainScreenState
