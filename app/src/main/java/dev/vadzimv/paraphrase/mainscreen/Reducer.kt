@@ -1,7 +1,5 @@
 package dev.vadzimv.paraphrase.mainscreen
 
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenEffect
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
 import dev.vadzimv.paraphrase.redux.Action
 
 fun mainScreenReducer(state: MainScreenState, action: Action) = when (action) {

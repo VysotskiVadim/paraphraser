@@ -5,9 +5,6 @@ import dev.vadzimv.paraphrase.Chat
 import dev.vadzimv.paraphrase.ChatRequest
 import dev.vadzimv.paraphrase.ChatResponse
 import dev.vadzimv.paraphrase.Clipboard
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenEffect
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
 import dev.vadzimv.paraphrase.redux.Middleware
 import dev.vadzimv.paraphrase.redux.middleware
 import kotlinx.coroutines.Dispatchers

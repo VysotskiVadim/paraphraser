@@ -3,10 +3,10 @@ package dev.vadzimv.paraphrase.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
+import dev.vadzimv.paraphrase.redux.Dispatcher
 
 @Composable
-fun SettingsUI(settingsState: SettingsState, actionProcessor: ActionProcessor) {
+fun SettingsUI(settingsState: SettingsState, dispatcher: Dispatcher) {
     Column {
         Text(text = "screen is not implemented yet")
         Text(text = "Your token is: ${settingsState.chatSettings.openAIToken.substring(0, 4)}...")

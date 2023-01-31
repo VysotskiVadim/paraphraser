@@ -2,14 +2,14 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.mainscreen.mainScreenMiddleware
 import dev.vadzimv.paraphrase.mainscreen.mainScreenReducer
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
+import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationState
-import dev.vadzimv.paraphrase.navigation.createNavigationSlice
+import dev.vadzimv.paraphrase.navigation.createNavigationInitialState
 import dev.vadzimv.paraphrase.navigation.navigationReducer
 import dev.vadzimv.paraphrase.redux.Action
 import dev.vadzimv.paraphrase.redux.Store
 import dev.vadzimv.paraphrase.settings.SettingsState
-import dev.vadzimv.paraphrase.settings.createSettingsSlice
+import dev.vadzimv.paraphrase.settings.createSettingsInitialState
 import dev.vadzimv.paraphrase.settings.settingsReducer
 
 data class AppState(
@@ -31,9 +31,9 @@ fun createStore(
     clipboard: Clipboard
 ) = Store(
     AppState(
-        createNavigationSlice().initialState,
+        createNavigationInitialState(),
         MainScreenState.Empty,
-        createSettingsSlice().initialState
+        createSettingsInitialState()
     ),
     ::appReducer,
     listOf(

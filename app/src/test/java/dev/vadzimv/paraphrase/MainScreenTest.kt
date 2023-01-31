@@ -3,8 +3,8 @@ package dev.vadzimv.paraphrase
 import dev.vadzimv.paraphrase.doubles.FakePlainTextClipboard
 import dev.vadzimv.paraphrase.doubles.StubChat
 import dev.vadzimv.paraphrase.mainscreen.mainScreenStateSelector
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
+import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
+import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

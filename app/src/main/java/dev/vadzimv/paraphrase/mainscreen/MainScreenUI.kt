@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase
+package dev.vadzimv.paraphrase.mainscreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,15 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenAction
-import dev.vadzimv.paraphrase.mainscreendeprecated.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationAction
-import dev.vadzimv.paraphrase.redux.deprecated.ActionProcessor
+import dev.vadzimv.paraphrase.redux.Action
+import dev.vadzimv.paraphrase.redux.Dispatcher
 
 @Composable
-fun MainScreen(state: MainScreenState, actionProcessor: ActionProcessor) {
+fun MainScreen(state: MainScreenState, dispatcher: Dispatcher) {
     Column(Modifier.padding(20.dp)) {
-        Button(onClick = { actionProcessor.processAction(NavigationAction.OpenSettings) }) {
+        Button(onClick = { dispatcher(NavigationAction.OpenSettings) }) {
             Text(text = "Settings")
         }
 
@@ -42,7 +41,7 @@ fun MainScreen(state: MainScreenState, actionProcessor: ActionProcessor) {
                     modifier = Modifier.padding(top = 20.dp, bottom = 13.dp),
                 )
                 Text(text = state.paraphrasedText, fontSize = primaryFontSize)
-                Button(onClick = { actionProcessor.processAction(MainScreenAction.CopyText) }, Modifier.padding(top = 10.dp)) {
+                Button(onClick = { dispatcher(MainScreenAction.CopyText) }, Modifier.padding(top = 10.dp)) {
                     Text(text = "copy")
                 }
             }
@@ -57,8 +56,5 @@ fun readyStatePreview() = MainScreen(
         "testing preview of the text",
         "paraphrased test"
     ),
-    actionProcessor = object : ActionProcessor {
-        override fun processAction(action: dev.vadzimv.paraphrase.redux.Action) {
-        }
-    }
+    { }
 )

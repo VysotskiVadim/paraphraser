@@ -1,29 +1,20 @@
 package dev.vadzimv.paraphrase.navigation
 
 import dev.vadzimv.paraphrase.redux.Action
-import dev.vadzimv.paraphrase.redux.deprecated.Effect
-import dev.vadzimv.paraphrase.redux.deprecated.ForwardingMiddleware
-import dev.vadzimv.paraphrase.redux.deprecated.Slice
-
-typealias NavigationSlice = Slice<NavigationState, NavigationAction, NavigationAction>
-
-fun createNavigationSlice(): NavigationSlice = Slice(
-    NavigationState(Screen.Main, false),
-    ForwardingMiddleware(),
-    { s, a -> navigationReducer(s, a) }
-)
 
 data class NavigationState(
     val currentScreen: Screen,
     val handleBackButton: Boolean
 )
 
+fun createNavigationInitialState() = NavigationState(Screen.Main, false)
+
 sealed interface Screen {
     object Settings : Screen
     object Main : Screen
 }
 
-sealed interface NavigationAction : dev.vadzimv.paraphrase.redux.Action, Effect {
+sealed interface NavigationAction : Action {
     object OpenSettings : NavigationAction
     object Back : NavigationAction
 }
