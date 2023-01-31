@@ -68,13 +68,13 @@ class MainScreenTest {
         val paraphrasor = StubChat().apply {
             setResult("paraphrased")
         }
-        val store = createTestMainScreenSlice(
-            paraphrasor = paraphrasor,
+        val store = createTestStore(
+            chat = paraphrasor,
             clipboard = clipboard
-        ).toStore()
+        )
 
-        store.processAction(MainScreenAction.UserSelectedTextToParaphrase("test"))
-        store.processAction(MainScreenAction.CopyText)
+        store.dispatch(MainScreenAction.UserSelectedTextToParaphrase("test"))
+        store.dispatch(MainScreenAction.CopyText)
 
         assertEquals("paraphrased", clipboard.value)
     }
@@ -96,7 +96,8 @@ class MainScreenTest {
 }
 
 fun createTestStore(
-    chat: Chat = StubChat()
+    chat: Chat = StubChat(),
+    clipboard: Clipboard = FakePlainTextClipboard()
 ) = dev.vadzimv.paraphrase.redux.Store<AppState>(
     AppState(
         createNavigationSlice().initialState,
@@ -109,7 +110,7 @@ fun createTestStore(
         )
     },
     listOf(
-        mainScreenMiddleware(chat)
+        mainScreenMiddleware(chat, clipboard)
     )
 )
 
