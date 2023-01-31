@@ -18,14 +18,12 @@ internal class StoreTest {
         val store = Store(
             initialState = TestState(subState1 = SubState1(1)),
             reducer = combineTestReducers(),
-            middlewares = listOf { _ ->
-                { next ->
-                    { action ->
-                        next(action)
-                        next(action)
-                    }
+            middlewares = listOf(
+                middleware { _, next, action ->
+                    next(action)
+                    next(action)
                 }
-            }
+            )
         )
         store.dispatch(Add1Action)
         assertEquals(3, store.state.subState1.test)
@@ -49,13 +47,9 @@ internal class StoreTest {
             TestState(subState1 = SubState1(0)),
             combineTestReducers(),
             middlewares = listOf(
-                { _ ->
-                    { next ->
-                        { action ->
-                            loggedActions.add(action)
-                            next(action)
-                        }
-                    }
+                middleware { _ , next: Dispatcher, action: Action ->
+                    loggedActions.add(action)
+                    next(action)
                 },
                 createAllEventsFilteringMiddleware()
             )
@@ -104,9 +98,6 @@ internal class StoreTest {
     }
 }
 
-private fun createAllEventsFilteringMiddleware() = { _: Store<TestState> ->
-    { _ : Dispatcher ->
-        { _ : Action ->
-        }
-    }
+private fun <TState> createAllEventsFilteringMiddleware(): Middleware<TState> = middleware { _, _, _ ->
+
 }
