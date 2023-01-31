@@ -22,6 +22,8 @@ data class SettingsState(
     val chatSettings: ChatSettings
 )
 
-fun settingsReducer(state: SettingsState, action: SettingsAction): SettingsState {
+fun createSettingsInitialState() = SettingsState(ChatSettings())
+
+fun settingsReducer(state: SettingsState, action: Action): SettingsState {
     return state
 }

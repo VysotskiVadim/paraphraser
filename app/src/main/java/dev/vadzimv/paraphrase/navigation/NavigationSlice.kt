@@ -7,10 +7,10 @@ import dev.vadzimv.paraphrase.redux.deprecated.Slice
 
 typealias NavigationSlice = Slice<NavigationState, NavigationAction, NavigationAction>
 
-fun createNavigationSlice() = Slice(
+fun createNavigationSlice(): NavigationSlice = Slice(
     NavigationState(Screen.Main, false),
     ForwardingMiddleware(),
-    ::navigationReducer
+    { s, a -> navigationReducer(s, a) }
 )
 
 data class NavigationState(
@@ -29,11 +29,14 @@ sealed interface NavigationAction : dev.vadzimv.paraphrase.redux.Action, Effect 
 }
 
 
-fun navigationReducer(state: NavigationState, effect: NavigationAction): NavigationState =
-    when (effect) {
-        NavigationAction.Back -> when (state.currentScreen) {
-            Screen.Main -> state
-            Screen.Settings -> state.copy(currentScreen = Screen.Main, handleBackButton = false)
+fun navigationReducer(state: NavigationState, action: Action): NavigationState =
+    when (action) {
+        is NavigationAction ->when (action) {
+            NavigationAction.Back -> when (state.currentScreen) {
+                Screen.Main -> state
+                Screen.Settings -> state.copy(currentScreen = Screen.Main, handleBackButton = false)
+            }
+            NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
         }
-        NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
+        else -> state
     }
