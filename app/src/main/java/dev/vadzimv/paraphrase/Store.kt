@@ -8,6 +8,7 @@ import dev.vadzimv.paraphrase.navigation.createNavigationInitialState
 import dev.vadzimv.paraphrase.navigation.navigationReducer
 import dev.vadzimv.paraphrase.redux.Action
 import dev.vadzimv.paraphrase.redux.Store
+import dev.vadzimv.paraphrase.redux.trunkMiddleware
 import dev.vadzimv.paraphrase.settings.SettingsState
 import dev.vadzimv.paraphrase.settings.createSettingsInitialState
 import dev.vadzimv.paraphrase.settings.settingsReducer
@@ -37,7 +38,8 @@ fun createStore(
     ),
     ::appReducer,
     listOf(
-        mainScreenMiddleware(chat, clipboard)
+        mainScreenMiddleware(chat, clipboard),
+        trunkMiddleware()
     )
 )
 

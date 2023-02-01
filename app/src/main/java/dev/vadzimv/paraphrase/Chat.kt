@@ -11,7 +11,7 @@ interface Chat {
 
 data class ChatRequest(
     val text: String,
-    val settings: ChatSettings = ChatSettings()
+    val settings: ChatSettings
 )
 
 data class ChatSettings(

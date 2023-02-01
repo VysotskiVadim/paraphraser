@@ -5,11 +5,10 @@ import dev.vadzimv.paraphrase.Chat
 import dev.vadzimv.paraphrase.ChatRequest
 import dev.vadzimv.paraphrase.ChatResponse
 import dev.vadzimv.paraphrase.Clipboard
+import dev.vadzimv.paraphrase.authenticatedRequestAction
 import dev.vadzimv.paraphrase.redux.Middleware
 import dev.vadzimv.paraphrase.redux.middleware
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import dev.vadzimv.paraphrase.settings.chatSettingsSelector
 
 fun mainScreenMiddleware(chat: Chat, clipboard: Clipboard): Middleware<AppState> =
     middleware { store, next, action ->
@@ -23,11 +22,12 @@ fun mainScreenMiddleware(chat: Chat, clipboard: Clipboard): Middleware<AppState>
                 }
                 is MainScreenAction.UserSelectedTextToParaphrase -> {
                     if (action.text != null) {
-                        next(MainScreenEffect.ParaphrasingStarted)
-                        GlobalScope.launch(Dispatchers.Unconfined) {
+                        next(authenticatedRequestAction { token, dispatch, getState ->
+                            dispatch(MainScreenEffect.ParaphrasingStarted)
                             val effect = when (val result = chat.request(
                                 ChatRequest(
-                                    text = "paraphrase: \"${action.text}\""
+                                    text = "paraphrase: \"${action.text}\"",
+                                    getState().chatSettingsSelector()
                                 )
                             )) {
                                 ChatResponse.Error -> MainScreenEffect.ParaphrasingFailed
@@ -36,8 +36,8 @@ fun mainScreenMiddleware(chat: Chat, clipboard: Clipboard): Middleware<AppState>
                                     result.reply
                                 )
                             }
-                            next(effect)
-                        }
+                            dispatch(effect)
+                        })
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package dev.vadzimv.paraphrase.settings
 
+import dev.vadzimv.paraphrase.AppState
 import dev.vadzimv.paraphrase.ChatSettings
 import dev.vadzimv.paraphrase.redux.Action
 
@@ -16,3 +17,5 @@ fun createSettingsInitialState() = SettingsState(ChatSettings())
 fun settingsReducer(state: SettingsState, action: Action): SettingsState {
     return state
 }
+
+fun AppState.chatSettingsSelector() = settingsState.chatSettings
