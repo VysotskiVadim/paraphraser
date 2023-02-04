@@ -8,10 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-typealias AuthRequestBlock = suspend (token: String, dispatch: Dispatcher, getState: GetState<AppState>) -> Unit
+typealias AuthRequestBlock = suspend (dispatch: Dispatcher, getState: GetState<AppState>) -> AuthenticatedActionResult
+
+sealed interface AuthenticatedActionResult {
+    object AuthOk : AuthenticatedActionResult
+    object TokenError: AuthenticatedActionResult
+}
 
 fun authenticatedRequestAction(block: AuthRequestBlock): Action = trunk<AppState> { dispatch, getState ->
     GlobalScope.launch(Dispatchers.Unconfined) {
-        block(getState().settingsState.chatSettings.openAIToken, dispatch, getState)
+        val result = block(dispatch, getState)
+        // TODO: refresh token?
     }
 }
