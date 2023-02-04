@@ -39,4 +39,4 @@ private fun SettingsScreen(
 @Preview
 @Composable
 fun PreviewSettingsScreen() =
-    SettingsScreen(settingsUI = defaultSettingsUiState(), dispatcher = { })
+    SettingsScreen(settingsUI = previewSettingsUIState(), dispatcher = { })

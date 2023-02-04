@@ -29,12 +29,13 @@ fun appReducer(state: AppState, action: Action): AppState {
 
 fun createStore(
     chat: Chat,
-    clipboard: Clipboard
+    clipboard: Clipboard,
+    keyValueStorage: KeyValueStorage
 ) = Store(
     AppState(
         createNavigationInitialState(),
         MainScreenState.Empty,
-        createSettingsInitialState()
+        createSettingsInitialState(keyValueStorage)
     ),
     ::appReducer,
     listOf(

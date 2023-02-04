@@ -1,5 +1,6 @@
 package dev.vadzimv.paraphrase
 
+import dev.vadzimv.paraphrase.doubles.FakeKeyValueStorage
 import dev.vadzimv.paraphrase.settings.SettingsAction
 import dev.vadzimv.paraphrase.settings.chatSettingsSelector
 import dev.vadzimv.paraphrase.settings.settingsUiStateSelector
@@ -8,6 +9,16 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 class SettingsTest {
+    @Test
+    fun `initial token value`() {
+        val store = createTestStore(
+            keyValueStorage = FakeKeyValueStorage(mapOf("accessToken" to "testToken"))
+        )
+
+        assertEquals("testToken", store.state.chatSettingsSelector().openAIToken)
+        assertEquals("testToken", store.state.settingsUiStateSelector().accessToken.value)
+    }
+
     @Test
     fun `user updates and saves token`() {
         val store = createTestStore()

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     val store = createStore(
         chat = OpenAIParaphrasor(),
-        clipboard = AndroidClipboard(application)
+        clipboard = AndroidClipboard(application),
+        keyValueStorage = SharedPreferenceKeyValueStorage(application)
     )
 }
