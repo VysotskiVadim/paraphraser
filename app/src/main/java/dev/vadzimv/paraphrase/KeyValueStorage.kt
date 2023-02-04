@@ -8,10 +8,10 @@ interface KeyValueStorage {
     fun read(key: String): String?
 }
 
+//TODO: encrypt
 class SharedPreferenceKeyValueStorage(context: Context) : KeyValueStorage {
 
     private val preference: SharedPreferences = context.getSharedPreferences("app-settings", Context.MODE_PRIVATE)
-
 
     override fun save(key: String, value: String) {
         preference.edit().putString(key, value).apply()
