@@ -13,9 +13,7 @@ data class SettingsState(
 )
 
 data class SettingsUIState(
-    val accessToken: SettingFiled,
-    val temperature: SettingFiled,
-    val maxTokens: SettingFiled
+    val accessToken: SettingFiled
 )
 
 data class SettingFiled(
@@ -23,5 +21,5 @@ data class SettingFiled(
 )
 
 fun defaultSettingsUiState() = SettingsUIState(
-    SettingFiled("test"), SettingFiled("0.5"), SettingFiled("200")
+    SettingFiled("test")
 )
