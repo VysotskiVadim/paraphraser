@@ -20,7 +20,7 @@ class SettingsTest {
     }
 
     @Test
-    fun `user updates and saves token`() {
+    fun `user updates token`() {
         val store = createTestStore()
         val testNewToken = "test123"
 
@@ -30,5 +30,18 @@ class SettingsTest {
 
         store.dispatch(SettingsAction.Save)
         assertEquals(testNewToken, store.state.chatSettingsSelector().openAIToken)
+    }
+
+    @Test
+    fun `user updates token and restarts app`() {
+        val storage = FakeKeyValueStorage()
+        val store = createTestStore(keyValueStorage = storage)
+        val testNewToken = "test123"
+        store.dispatch(SettingsAction.TokenUpdated(testNewToken))
+        store.dispatch(SettingsAction.Save)
+
+        val newStore = createTestStore(keyValueStorage = storage)
+        assertEquals(testNewToken, newStore.state.settingsUiStateSelector().accessToken.value)
+        assertEquals(testNewToken, newStore.state.chatSettingsSelector().openAIToken)
     }
 }

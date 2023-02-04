@@ -11,6 +11,7 @@ import dev.vadzimv.paraphrase.redux.Store
 import dev.vadzimv.paraphrase.redux.trunkMiddleware
 import dev.vadzimv.paraphrase.settings.SettingsState
 import dev.vadzimv.paraphrase.settings.createSettingsInitialState
+import dev.vadzimv.paraphrase.settings.createSettingsMiddleware
 import dev.vadzimv.paraphrase.settings.settingsReducer
 
 data class AppState(
@@ -40,6 +41,7 @@ fun createStore(
     ::appReducer,
     listOf(
         mainScreenMiddleware(chat, clipboard),
+        createSettingsMiddleware(keyValueStorage),
         trunkMiddleware()
     )
 )
