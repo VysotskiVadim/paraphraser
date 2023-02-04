@@ -2,7 +2,7 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.Screen
-import dev.vadzimv.paraphrase.settings.selectNavigationState
+import dev.vadzimv.paraphrase.navigation.selectNavigationState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

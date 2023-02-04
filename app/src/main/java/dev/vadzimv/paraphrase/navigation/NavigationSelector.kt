@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.settings
+package dev.vadzimv.paraphrase.navigation
 
 import dev.vadzimv.paraphrase.AppState
 
