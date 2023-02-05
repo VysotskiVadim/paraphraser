@@ -11,12 +11,9 @@ import org.junit.Test
 class SettingsTest {
     @Test
     fun `initial token value`() {
-        val store = createTestStore(
-            keyValueStorage = FakeKeyValueStorage(mapOf("accessToken" to "testToken"))
-        )
-
-        assertEquals("testToken", store.state.chatSettingsSelector().openAIToken)
-        assertEquals("testToken", store.state.settingsUiStateSelector().accessToken.value)
+        val store = createTestStore()
+        assertEquals(BuildConfig.OPEN_AI_TOKEN, store.state.chatSettingsSelector().openAIToken)
+        assertEquals(BuildConfig.OPEN_AI_TOKEN, store.state.settingsUiStateSelector().accessToken.value)
     }
 
     @Test
