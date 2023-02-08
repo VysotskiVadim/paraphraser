@@ -1,5 +1,8 @@
 package dev.vadzimv.paraphrase
 
+import dev.vadzimv.paraphrase.chatscreen.ChatScreenState
+import dev.vadzimv.paraphrase.chatscreen.chatScreenReducer
+import dev.vadzimv.paraphrase.chatscreen.createDefaultChatScreenState
 import dev.vadzimv.paraphrase.mainscreen.mainScreenMiddleware
 import dev.vadzimv.paraphrase.mainscreen.mainScreenReducer
 import dev.vadzimv.paraphrase.mainscreen.MainScreenState
@@ -18,13 +21,15 @@ data class AppState(
     val navigationState: NavigationState,
     val mainScreenState: MainScreenState,
     val settingsState: SettingsState,
+    val chatScreenState: ChatScreenState,
 )
 
 fun appReducer(state: AppState, action: Action): AppState {
     return state.copy(
         mainScreenState = mainScreenReducer(state.mainScreenState, action),
         settingsState = settingsReducer(state.settingsState, action),
-        navigationState = navigationReducer(state.navigationState, action)
+        navigationState = navigationReducer(state.navigationState, action),
+        chatScreenState = chatScreenReducer(state.chatScreenState, action)
     )
 }
 
@@ -36,7 +41,8 @@ fun createStore(
     AppState(
         createNavigationInitialState(),
         MainScreenState.Empty,
-        createSettingsInitialState(keyValueStorage)
+        createSettingsInitialState(keyValueStorage),
+        createDefaultChatScreenState()
     ),
     ::appReducer,
     listOf(
