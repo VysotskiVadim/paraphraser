@@ -6,6 +6,8 @@ import dev.vadzimv.paraphrase.chatscreen.getChatScreenState
 import dev.vadzimv.paraphrase.doubles.StubChat
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ChatScreenTest {
@@ -38,5 +40,6 @@ class ChatScreenTest {
         assertEquals("", store.state.chatScreenState.inputState.text)
         val chatLoadingStateItems = store.state.getChatScreenState().chatItems
         assertEquals("ping", (chatLoadingStateItems[0] as? ChatItem.SentMessage)?.text)
+        assertTrue(chatLoadingStateItems[1] is ChatItem.Loading)
     }
 }

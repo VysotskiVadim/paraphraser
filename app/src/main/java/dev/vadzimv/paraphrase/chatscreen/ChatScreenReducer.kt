@@ -15,6 +15,9 @@ fun chatScreenReducer(state: ChatScreenState, action: Action): ChatScreenState =
     }
     is ChatScreenEffects -> {
         when (val effect = action) {
+            is ChatScreenEffects.AskingQuestion -> state.copy(
+                chatItems = state.chatItems + ChatItem.Loading
+            )
             is ChatScreenEffects.SuccessfulChatResponse -> state
             else -> state
         }

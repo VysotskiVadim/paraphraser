@@ -2,6 +2,7 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.chatscreen.ChatScreenState
 import dev.vadzimv.paraphrase.chatscreen.chatScreenReducer
+import dev.vadzimv.paraphrase.chatscreen.createChatScreenMiddleware
 import dev.vadzimv.paraphrase.chatscreen.createDefaultChatScreenState
 import dev.vadzimv.paraphrase.mainscreen.mainScreenMiddleware
 import dev.vadzimv.paraphrase.mainscreen.mainScreenReducer
@@ -47,6 +48,7 @@ fun createStore(
     ::appReducer,
     listOf(
         mainScreenMiddleware(chat, clipboard),
+        createChatScreenMiddleware(chat),
         createSettingsMiddleware(keyValueStorage),
         trunkMiddleware()
     )

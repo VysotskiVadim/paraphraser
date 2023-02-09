@@ -10,5 +10,6 @@ sealed interface ChatScreenActions : Action {
 internal sealed interface ChatScreenEffects : Action {
     data class SuccessfulChatResponse(val response: String): ChatScreenEffects
     object FailedChatResponse: ChatScreenEffects
+    object AskingQuestion : ChatScreenEffects
 }
 
