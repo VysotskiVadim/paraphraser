@@ -1,5 +1,9 @@
 package dev.vadzimv.paraphrase.chatscreen
 
+import dev.vadzimv.paraphrase.AppState
+
+fun AppState.getChatScreenState() = chatScreenState
+
 data class ChatScreenState(
     val chatItems: List<ChatItem>,
     val inputState: InputState
