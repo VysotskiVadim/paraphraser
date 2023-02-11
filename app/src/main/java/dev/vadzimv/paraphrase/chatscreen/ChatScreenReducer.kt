@@ -16,9 +16,16 @@ fun chatScreenReducer(state: ChatScreenState, action: Action): ChatScreenState =
     is ChatScreenEffects -> {
         when (val effect = action) {
             is ChatScreenEffects.AskingQuestion -> state.copy(
-                chatItems = state.chatItems + ChatItem.Loading
+                chatItems = state.chatItems + ChatItem.Loading,
+                canSendQuestion = false,
             )
-            is ChatScreenEffects.SuccessfulChatResponse -> state
+            is ChatScreenEffects.SuccessfulChatResponse -> state.copy(
+                chatItems = state.chatItems.toMutableList().apply {
+                    val loadingIndex = indexOfFirst { it is ChatItem.Loading }
+                    set(loadingIndex, ChatItem.ReceivedMessage(effect.response))
+                },
+                canSendQuestion = true
+            )
             else -> state
         }
     }

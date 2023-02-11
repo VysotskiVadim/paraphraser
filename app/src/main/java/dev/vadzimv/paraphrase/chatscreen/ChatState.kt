@@ -6,19 +6,21 @@ fun AppState.getChatScreenState() = chatScreenState
 
 data class ChatScreenState(
     val chatItems: List<ChatItem>,
-    val inputState: InputState
+    val inputState: InputState,
+    val canSendQuestion: Boolean,
 )
 
 fun createDefaultChatScreenState() = ChatScreenState(
     emptyList(),
-    InputState("")
+    InputState(""),
+    true
 )
 
 data class InputState(val text: String)
 
 sealed interface ChatItem {
     object Loading : ChatItem
-    data class IncomingMessage(val text: String) : ChatItem
+    data class ReceivedMessage(val text: String) : ChatItem
     data class SentMessage(val text: String) : ChatItem
     object RetriableError: ChatItem
 }
