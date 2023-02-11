@@ -47,7 +47,7 @@ internal class StoreTest {
             TestState(subState1 = SubState1(0)),
             combineTestReducers(),
             middlewares = listOf(
-                middleware { _ , next: Dispatcher, action: Action ->
+                middleware { _, next: Dispatcher, action: Action ->
                     loggedActions.add(action)
                     next(action)
                 },
@@ -60,6 +60,33 @@ internal class StoreTest {
 
         assertEquals(0, store.state.subState1.test)
         assertEquals(listOf(Add1Action, ToUpperCaseAction), loggedActions)
+    }
+
+    @Test
+    fun `new dispatched events are applied in order`() {
+        val store = Store(
+            initialState = "",
+            reducer = { state, action ->
+                when (action) {
+                    is AddLetterAction -> state + action.letter
+                    is AddLetter2Action -> state + action.letter
+                    else -> state
+                }
+            },
+            middlewares = listOf(
+                middleware { store, next, action ->
+                    if (action is AddLetterAction) {
+                        store.dispatch(AddLetter2Action('b'))
+                        store.dispatch(AddLetter2Action('c'))
+                    }
+                    next(action)
+                }
+            )
+        )
+
+        store.dispatch(AddLetterAction('a'))
+
+        assertEquals("abc", store.state)
     }
 
     @Test
@@ -98,6 +125,10 @@ internal class StoreTest {
     }
 }
 
-private fun <TState> createAllEventsFilteringMiddleware(): Middleware<TState> = middleware { _, _, _ ->
+private fun <TState> createAllEventsFilteringMiddleware(): Middleware<TState> =
+    middleware { _, _, _ ->
 
-}
+    }
+
+data class AddLetterAction(val letter: Char) : Action
+data class AddLetter2Action(val letter: Char) : Action

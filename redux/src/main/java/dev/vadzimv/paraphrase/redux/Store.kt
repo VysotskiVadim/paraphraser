@@ -21,12 +21,25 @@ class Store<TState>(
 
     private var dispatcher: Dispatcher = { action -> _state = reducer(_state, action) }
 
+    private var isDispatching = false
+    private var dispatchQueue = ArrayDeque<Action>()
+
     init {
         setMiddlewares(middlewares)
     }
 
     fun dispatch(action: Action) {
-        dispatcher(action)
+        if (!isDispatching) {
+            isDispatching = true
+            var nextAction: Action? = action
+            while (nextAction != null) {
+                dispatcher(nextAction)
+                nextAction = dispatchQueue.removeFirstOrNull()
+            }
+            isDispatching = false
+        } else {
+            dispatchQueue.add(action)
+        }
     }
 
     fun registerStateObserver(observer: (TState) -> Unit) {
