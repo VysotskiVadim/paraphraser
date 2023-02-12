@@ -1,13 +1,16 @@
 package dev.vadzimv.paraphrase.chatscreen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.vadzimv.paraphrase.redux.Dispatcher
 
@@ -19,7 +22,7 @@ fun ChatScreenUIPreview() {
 
 @Composable
 fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
-    Column {
+    Column(verticalArrangement = Arrangement.SpaceBetween) {
         LazyColumn {
             items(state.chatItems) {item ->
                 when (item) {
@@ -28,10 +31,9 @@ fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
                     ChatItem.RetriableError -> Text(text = "error")
                     is ChatItem.SentMessage -> Text(text = item.text)
                 }
-
             }
         }
-        Row {
+        Row(Modifier.weight(1f, false)) {
             val inputState = state.inputState
             TextField(
                 value = inputState.text,
