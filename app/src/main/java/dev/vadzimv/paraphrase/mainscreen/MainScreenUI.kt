@@ -16,10 +16,6 @@ import dev.vadzimv.paraphrase.redux.Dispatcher
 @Composable
 fun MainScreen(state: MainScreenState, dispatcher: Dispatcher) {
     Column(Modifier.padding(20.dp)) {
-        Button(onClick = { dispatcher(NavigationAction.OpenSettings) }) {
-            Text(text = "Settings")
-        }
-
         Button(onClick = { dispatcher(NavigationAction.OpenChat) }) {
             Text(text = "Start chatting")
         }
