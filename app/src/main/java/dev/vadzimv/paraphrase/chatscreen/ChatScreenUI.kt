@@ -30,6 +30,7 @@ fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
                     is ChatItem.ReceivedMessage -> Text(text = item.text)
                     ChatItem.RetriableError -> Text(text = "error")
                     is ChatItem.SentMessage -> Text(text = item.text)
+                    is ChatItem.ClarifyActionForText -> Text(text = item.text + "\nWhat should I do with the text above? \uD83D\uDC46")
                 }
             }
         }

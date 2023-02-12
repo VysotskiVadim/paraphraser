@@ -2,7 +2,6 @@ package dev.vadzimv.paraphrase
 
 import dev.vadzimv.paraphrase.chatscreen.ChatItem
 import dev.vadzimv.paraphrase.chatscreen.ChatScreenActions
-import dev.vadzimv.paraphrase.chatscreen.ChatScreenState
 import dev.vadzimv.paraphrase.chatscreen.getChatScreenState
 import dev.vadzimv.paraphrase.doubles.StubChat
 import kotlinx.coroutines.CompletableDeferred
@@ -72,5 +71,29 @@ class ChatScreenTest {
         store.dispatch(ChatScreenActions.UserClickedSendQuestion)
 
         assertEquals(initialChatState, store.state.chatScreenState)
+    }
+
+    @Test
+    fun `user processes text from a different app`() {
+        val chat = StubChat().apply {
+            setResult("result")
+        }
+        val store = createTestStore(chat = chat)
+
+        store.dispatch(ChatScreenActions.UserSelectedTestFromADifferentApp("test"))
+
+        val textInsertedChatItems = store.state.chatScreenState.chatItems
+        assertEquals("test", (textInsertedChatItems[0] as? ChatItem.ClarifyActionForText)?.text)
+        assertEquals(1, textInsertedChatItems.size)
+
+        store.dispatch(ChatScreenActions.UserInputUpdated("paraphrase"))
+        store.dispatch(ChatScreenActions.UserClickedSendQuestion)
+
+        val testProcessedItems = store.state.chatScreenState.chatItems
+        assertEquals("paraphrase \"test\"", (testProcessedItems[1] as? ChatItem.SentMessage)?.text)
+        assertEquals(
+            "chat state $testProcessedItems",
+            "result", (testProcessedItems[2] as? ChatItem.ReceivedMessage)?.text
+        )
     }
 }

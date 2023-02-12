@@ -20,6 +20,7 @@ data class InputState(val text: String)
 
 sealed interface ChatItem {
     object Loading : ChatItem
+    data class ClarifyActionForText(val text: String) : ChatItem
     data class ReceivedMessage(val text: String) : ChatItem
     data class SentMessage(val text: String) : ChatItem
     object RetriableError: ChatItem

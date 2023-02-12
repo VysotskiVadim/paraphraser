@@ -13,8 +13,18 @@ import dev.vadzimv.paraphrase.redux.middleware
 import dev.vadzimv.paraphrase.settings.chatSettingsSelector
 
 fun createChatScreenMiddleware(chat: Chat) = middleware { store: Store<AppState>, next: Dispatcher, action: Action ->
-    if (action is ChatScreenActions.UserClickedSendQuestion && store.state.chatScreenState.inputState.text.isNotBlank()) {
-        next(askQuestionAction(chat, store.state.getChatScreenState().inputState.text))
+    if (action is ChatScreenActions.UserClickedSendQuestion) {
+        if (store.state.chatScreenState.inputState.text.isNotBlank()) {
+            val input = store.state.getChatScreenState().inputState.text
+            val clarifyQuestion = store.state.chatScreenState.chatItems.lastOrNull() as? ChatItem.ClarifyActionForText
+            val question = if (clarifyQuestion != null) {
+                input + " \"${clarifyQuestion.text}\""
+            } else input
+            if (question != input) {
+                next(ChatScreenEffects.AskedQuestionAfterClarification(question))
+            }
+            next(askQuestionAction(chat, question))
+        }
     }
     next(action)
 }

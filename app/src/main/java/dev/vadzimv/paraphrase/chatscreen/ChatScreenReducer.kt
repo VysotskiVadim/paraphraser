@@ -9,11 +9,14 @@ fun chatScreenReducer(state: ChatScreenState, action: Action): ChatScreenState =
                 inputState = InputState(action.newValue),
                 canSendQuestion = action.newValue.isNotBlank()
             )
+            is ChatScreenActions.UserSelectedTestFromADifferentApp -> state.copy(
+                chatItems = state.chatItems + ChatItem.ClarifyActionForText(action.text)
+            )
             else -> state
         }
     }
     is ChatScreenEffects -> {
-        when (val effect = action) {
+        when (action) {
             is ChatScreenEffects.AskingQuestion -> {
                 if (state.inputState.text.isNotBlank()) {
                     state.copy(
@@ -28,11 +31,18 @@ fun chatScreenReducer(state: ChatScreenState, action: Action): ChatScreenState =
             is ChatScreenEffects.SuccessfulChatResponse -> state.copy(
                 chatItems = state.chatItems.toMutableList().apply {
                     val loadingIndex = indexOfFirst { it is ChatItem.Loading }
-                    set(loadingIndex, ChatItem.ReceivedMessage(effect.response))
+                    set(loadingIndex, ChatItem.ReceivedMessage(action.response))
                 },
                 canSendQuestion = true
             )
-            else -> state
+            is ChatScreenEffects.AskedQuestionAfterClarification -> state.copy(
+                chatItems = state.chatItems + ChatItem.SentMessage(action.question) + ChatItem.Loading,
+                inputState = InputState(""),
+                canSendQuestion = false, //TODO: fix duplication with regular loading
+            )
+            is ChatScreenEffects.FailedChatResponse -> state.copy(
+                chatItems = state.chatItems + ChatItem.RetriableError
+            )
         }
     }
     else -> state
