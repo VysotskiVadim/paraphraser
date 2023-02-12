@@ -13,7 +13,7 @@ data class ChatScreenState(
 fun createDefaultChatScreenState() = ChatScreenState(
     emptyList(),
     InputState(""),
-    true
+    false
 )
 
 data class InputState(val text: String)

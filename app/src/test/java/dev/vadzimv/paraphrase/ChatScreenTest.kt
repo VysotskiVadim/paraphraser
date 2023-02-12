@@ -35,8 +35,9 @@ class ChatScreenTest {
             chat = chat
         )
 
-        assertTrue(store.state.chatScreenState.canSendQuestion)
+        assertFalse(store.state.chatScreenState.canSendQuestion)
         store.dispatch(ChatScreenActions.UserInputUpdated("ping"))
+        assertTrue(store.state.chatScreenState.canSendQuestion)
         store.dispatch(ChatScreenActions.UserClickedSendQuestion)
 
         assertEquals("", store.state.chatScreenState.inputState.text)
@@ -60,5 +61,16 @@ class ChatScreenTest {
         assertEquals("ping", (moreQuestionsState[2] as? ChatItem.SentMessage)?.text)
         assertEquals("pong", (moreQuestionsState[3] as? ChatItem.ReceivedMessage)?.text)
         assertTrue(store.state.chatScreenState.canSendQuestion)
+    }
+
+    @Test
+    fun `user sends empty request`() {
+        val store = createTestStore()
+        store.dispatch(ChatScreenActions.UserInputUpdated(""))
+        val initialChatState = store.state.chatScreenState
+
+        store.dispatch(ChatScreenActions.UserClickedSendQuestion)
+
+        assertEquals(initialChatState, store.state.chatScreenState)
     }
 }
