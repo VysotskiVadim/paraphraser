@@ -26,4 +26,15 @@ class NavigationTest {
         assertEquals(Screen.Main, store.state.selectNavigationState().currentScreen)
         assertFalse(store.state.selectNavigationState().handleBackButton)
     }
+
+    @Test
+    fun `go to chat screen and back`() {
+        val store = createTestStore()
+        store.dispatch(NavigationAction.OpenChat)
+        assertEquals(Screen.Chat, store.state.selectNavigationState().currentScreen)
+        assertTrue(store.state.selectNavigationState().handleBackButton)
+        store.dispatch(NavigationAction.Back)
+        assertEquals(Screen.Main, store.state.selectNavigationState().currentScreen)
+        assertFalse(store.state.selectNavigationState().handleBackButton)
+    }
 }

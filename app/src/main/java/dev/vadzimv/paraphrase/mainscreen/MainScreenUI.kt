@@ -20,6 +20,10 @@ fun MainScreen(state: MainScreenState, dispatcher: Dispatcher) {
             Text(text = "Settings")
         }
 
+        Button(onClick = { dispatcher(NavigationAction.OpenChat) }) {
+            Text(text = "Start chatting")
+        }
+
         val primaryFontSize = 25.sp
         val secondaryFontSize = 17.sp
         when (state) {
