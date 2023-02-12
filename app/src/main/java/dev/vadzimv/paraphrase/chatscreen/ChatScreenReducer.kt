@@ -9,9 +9,11 @@ fun chatScreenReducer(state: ChatScreenState, action: Action): ChatScreenState =
                 inputState = InputState(action.newValue),
                 canSendQuestion = action.newValue.isNotBlank()
             )
-            is ChatScreenActions.UserSelectedTestFromADifferentApp -> state.copy(
-                chatItems = state.chatItems + ChatItem.ClarifyActionForText(action.text)
-            )
+            is ChatScreenActions.UserSelectedTestFromADifferentApp -> if (action.text != null) {
+                state.copy(
+                    chatItems = state.chatItems + ChatItem.ClarifyActionForText(action.text)
+                )
+            } else state
             else -> state
         }
     }

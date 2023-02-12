@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import dev.vadzimv.paraphrase.chatscreen.ChatScreenActions
 import dev.vadzimv.paraphrase.mainscreen.MainScreenAction
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationUI
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (intent.action == Intent.ACTION_PROCESS_TEXT) {
             val text = intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
-            store.dispatch(MainScreenAction.UserSelectedTextToParaphrase(text))
+            store.dispatch(ChatScreenActions.UserSelectedTestFromADifferentApp(text))
         }
         handBackPress()
         setContent {

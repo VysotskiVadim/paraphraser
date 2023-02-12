@@ -5,7 +5,7 @@ import dev.vadzimv.paraphrase.redux.Action
 sealed interface ChatScreenActions : Action {
     data class UserInputUpdated(val newValue: String): ChatScreenActions
     object UserClickedSendQuestion : ChatScreenActions
-    data class UserSelectedTestFromADifferentApp(val text: String): ChatScreenActions
+    data class UserSelectedTestFromADifferentApp(val text: String?): ChatScreenActions
 }
 
 internal sealed interface ChatScreenEffects : Action {

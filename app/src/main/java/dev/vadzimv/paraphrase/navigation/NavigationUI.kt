@@ -29,7 +29,6 @@ fun NavigationUI(state: AppState, dispatcher: Dispatcher) {
         )
         Surface(Modifier.fillMaxHeight()) {
             when (state.navigationState.currentScreen) {
-                Screen.Main -> MainScreen(state.mainScreenState, dispatcher)
                 Screen.Settings -> SettingsUI(state.settingsState, dispatcher)
                 Screen.Chat -> ChatScreenUI(state.chatScreenState, dispatcher)
             }

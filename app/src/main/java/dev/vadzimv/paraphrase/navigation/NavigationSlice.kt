@@ -7,11 +7,10 @@ data class NavigationState(
     val handleBackButton: Boolean
 )
 
-fun createNavigationInitialState() = NavigationState(Screen.Main, false)
+fun createNavigationInitialState() = NavigationState(Screen.Chat, false)
 
 sealed interface Screen {
     object Settings : Screen
-    object Main : Screen
     object Chat : Screen
 }
 
@@ -26,9 +25,8 @@ fun navigationReducer(state: NavigationState, action: Action): NavigationState =
     when (action) {
         is NavigationAction ->when (action) {
             NavigationAction.Back -> when (state.currentScreen) {
-                Screen.Main -> state
-                Screen.Settings -> state.copy(currentScreen = Screen.Main, handleBackButton = false)
-                else -> state.copy(currentScreen = Screen.Main, handleBackButton = false)
+                Screen.Settings -> state.copy(currentScreen = Screen.Chat, handleBackButton = false)
+                Screen.Chat -> state
             }
             NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
             NavigationAction.OpenChat -> state.copy(currentScreen = Screen.Chat, handleBackButton = true)
