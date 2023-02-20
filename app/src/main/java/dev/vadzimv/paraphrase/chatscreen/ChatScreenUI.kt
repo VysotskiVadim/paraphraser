@@ -35,20 +35,33 @@ fun ChatScreenUIEmptyPreview() {
 @Composable
 fun ChatScreenUIPreviewLongText() {
     ChatScreenUI(
-        state = createDefaultChatScreenState().run {
-            copy(
-                chatItems = listOf(
-                    ChatItem.SentMessage("ping ".repeat(3)),
-                    ChatItem.ReceivedMessage("pong ".repeat(4)),
-                    ChatItem.SentMessage("ping ".repeat(20)),
-                    ChatItem.ReceivedMessage("pong ".repeat(20))
-                ),
-                inputState = this.inputState.copy(
-                    text = "This is" + "very ".repeat(20) + "long text"
-                )
-            )
-        },
+        state = filledState(),
         dispatcher = { }
+    )
+}
+
+@Preview(showBackground = true, heightDp = 200)
+@Composable
+fun ChatScreenUIPreviewLongTextLowHeight() {
+    ChatScreenUI(
+        state = filledState(),
+        dispatcher = { }
+    )
+}
+
+private fun filledState() = createDefaultChatScreenState().run {
+    copy(
+        chatItems = listOf(
+            ChatItem.SentMessage("ping ".repeat(3)),
+            ChatItem.ReceivedMessage("pong ".repeat(4)),
+            ChatItem.SentMessage("ping ".repeat(20)),
+            ChatItem.ReceivedMessage("pong ".repeat(20)),
+            ChatItem.SentMessage("ping ".repeat(3)),
+            ChatItem.ReceivedMessage("pong ".repeat(4)),
+        ),
+        inputState = this.inputState.copy(
+            text = "This is" + "very ".repeat(20) + "long text"
+        )
     )
 }
 
@@ -58,7 +71,9 @@ fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        LazyColumn(Modifier.fillMaxWidth()) {
+        LazyColumn(
+            Modifier.weight(1f)
+        ) {
             items(state.chatItems) { item ->
                 when (item) {
                     ChatItem.Loading -> Text(text = "loading")
@@ -72,7 +87,6 @@ fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
         }
         Row(
             Modifier
-                .weight(1f, false)
                 .padding(5.dp)
         ) {
             val inputState = state.inputState
