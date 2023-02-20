@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.vadzimv.paraphrase.AppState
 import dev.vadzimv.paraphrase.chatscreen.ChatScreenUI
-import dev.vadzimv.paraphrase.mainscreen.MainScreen
 import dev.vadzimv.paraphrase.redux.Dispatcher
 import dev.vadzimv.paraphrase.settings.SettingsUI
 

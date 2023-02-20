@@ -4,9 +4,6 @@ import dev.vadzimv.paraphrase.chatscreen.ChatScreenState
 import dev.vadzimv.paraphrase.chatscreen.chatScreenReducer
 import dev.vadzimv.paraphrase.chatscreen.createChatScreenMiddleware
 import dev.vadzimv.paraphrase.chatscreen.createDefaultChatScreenState
-import dev.vadzimv.paraphrase.mainscreen.mainScreenMiddleware
-import dev.vadzimv.paraphrase.mainscreen.mainScreenReducer
-import dev.vadzimv.paraphrase.mainscreen.MainScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationState
 import dev.vadzimv.paraphrase.navigation.createNavigationInitialState
 import dev.vadzimv.paraphrase.navigation.navigationReducer
@@ -20,14 +17,12 @@ import dev.vadzimv.paraphrase.settings.settingsReducer
 
 data class AppState(
     val navigationState: NavigationState,
-    val mainScreenState: MainScreenState,
     val settingsState: SettingsState,
     val chatScreenState: ChatScreenState,
 )
 
 fun appReducer(state: AppState, action: Action): AppState {
     return state.copy(
-        mainScreenState = mainScreenReducer(state.mainScreenState, action),
         settingsState = settingsReducer(state.settingsState, action),
         navigationState = navigationReducer(state.navigationState, action),
         chatScreenState = chatScreenReducer(state.chatScreenState, action)
@@ -41,13 +36,11 @@ fun createStore(
 ) = Store(
     AppState(
         createNavigationInitialState(),
-        MainScreenState.Empty,
         createSettingsInitialState(keyValueStorage),
         createDefaultChatScreenState()
     ),
     ::appReducer,
     listOf(
-        mainScreenMiddleware(chat, clipboard),
         createChatScreenMiddleware(chat),
         createSettingsMiddleware(keyValueStorage),
         trunkMiddleware()
