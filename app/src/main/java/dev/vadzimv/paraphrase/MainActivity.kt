@@ -6,19 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import dev.vadzimv.paraphrase.chat.ChatScreenActions
 import dev.vadzimv.paraphrase.navigation.NavigationAction
 import dev.vadzimv.paraphrase.navigation.NavigationUI
 import dev.vadzimv.paraphrase.redux.Action
 import dev.vadzimv.paraphrase.redux.Store
-import dev.vadzimv.paraphrase.theme.ParaphrasorTheme
+import dev.vadzimv.paraphrase.theme.RootSurface
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
@@ -37,22 +33,17 @@ class MainActivity : ComponentActivity() {
         }
         handBackPress()
         setContent {
-            ParaphrasorTheme {
+            RootSurface {
                 val state by store.flowableState().collectAsState(store.state)
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    NavigationUI(state) { action: Action ->
-                        store.dispatch(action)
-                    }
+                NavigationUI(state) { action: Action ->
+                    store.dispatch(action)
                 }
             }
         }
     }
 
     private fun handBackPress() {
-        val callback:OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 store.dispatch(NavigationAction.Back)
             }

@@ -1,5 +1,6 @@
 package dev.vadzimv.paraphrase.chat
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,42 +12,43 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.vadzimv.paraphrase.redux.Dispatcher
+import dev.vadzimv.paraphrase.theme.RootSurface
 
-@Preview(showBackground = true)
+private const val EMPTY_GROUP = "empty"
+private const val FILLED_GROUP = "filled"
+
+@Preview(name = "empty small", group = EMPTY_GROUP, showBackground = true, heightDp = 400)
 @Composable
 fun ChatScreenUIEmptyPreview() {
-    ChatScreenUI(
-        state = createDefaultChatScreenState(),
-        dispatcher = { }
-    )
+    RootSurface {
+        ChatScreenUI(
+            state = createDefaultChatScreenState(),
+            dispatcher = { }
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "day", group = FILLED_GROUP, showBackground = true)
+@Preview(name = "small", group = FILLED_GROUP, showBackground = true, heightDp = 200)
+@Preview(name = "night", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ChatScreenUIPreviewLongText() {
-    ChatScreenUI(
-        state = filledState(),
-        dispatcher = { }
-    )
-}
-
-@Preview(showBackground = true, heightDp = 200)
-@Composable
-fun ChatScreenUIPreviewLongTextLowHeight() {
-    ChatScreenUI(
-        state = filledState(),
-        dispatcher = { }
-    )
+    RootSurface {
+        ChatScreenUI(
+            state = filledState(),
+            dispatcher = { }
+        )
+    }
 }
 
 private fun filledState() = createDefaultChatScreenState().run {
@@ -64,6 +66,7 @@ private fun filledState() = createDefaultChatScreenState().run {
         )
     )
 }
+
 
 @Composable
 fun ChatScreenUI(state: ChatScreenState, dispatcher: Dispatcher) {
@@ -115,11 +118,12 @@ private fun ReceivedMessage(item: ChatItem.ReceivedMessage) {
     ) {
         Text(
             text = item.text,
-            Modifier
+            color = MaterialTheme.colors.onSecondary,
+            modifier = Modifier
                 .padding(10.dp)
                 .padding(end = 20.dp)
                 .clip(RoundedCornerShape(7.dp))
-                .background(Color.Magenta)
+                .background(MaterialTheme.colors.secondary)
                 .padding(10.dp)
                 .align(Alignment.Start)
         )
@@ -133,11 +137,12 @@ private fun SentMessage(item: ChatItem.SentMessage) {
     ) {
         Text(
             text = item.text,
-            Modifier
+            color = MaterialTheme.colors.onPrimary,
+            modifier = Modifier
                 .padding(10.dp)
                 .padding(start = 20.dp)
                 .clip(RoundedCornerShape(7.dp))
-                .background(Color.Cyan)
+                .background(MaterialTheme.colors.primary)
                 .padding(10.dp)
                 .align(Alignment.End)
         )
