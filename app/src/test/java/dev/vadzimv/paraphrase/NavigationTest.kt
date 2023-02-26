@@ -14,6 +14,7 @@ class NavigationTest {
         val store = createTestStore()
         assertEquals(Screen.Chat, store.state.selectNavigationState().currentScreen)
         assertFalse(store.state.selectNavigationState().handleBackButton)
+        assertTrue(store.state.selectNavigationState().showSettingInToolbar)
     }
 
     @Test
@@ -22,8 +23,10 @@ class NavigationTest {
         store.dispatch(NavigationAction.OpenSettings)
         assertEquals(Screen.Settings, store.state.selectNavigationState().currentScreen)
         assertTrue(store.state.selectNavigationState().handleBackButton)
+        assertFalse(store.state.selectNavigationState().showSettingInToolbar)
         store.dispatch(NavigationAction.Back)
         assertEquals(Screen.Chat, store.state.selectNavigationState().currentScreen)
         assertFalse(store.state.selectNavigationState().handleBackButton)
+        assertTrue(store.state.selectNavigationState().showSettingInToolbar)
     }
 }

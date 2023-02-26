@@ -3,11 +3,15 @@ package dev.vadzimv.paraphrase.navigation
 import dev.vadzimv.paraphrase.redux.Action
 
 data class NavigationState(
-    val currentScreen: Screen,
-    val handleBackButton: Boolean
-)
+    val currentScreen: Screen
+) {
+    val handleBackButton = currentScreen != Screen.Chat
+    val showSettingInToolbar = currentScreen != Screen.Settings
+}
 
-fun createNavigationInitialState() = NavigationState(Screen.Chat, false)
+fun createNavigationInitialState() = NavigationState(
+    Screen.Chat
+)
 
 sealed interface Screen {
     object Settings : Screen
@@ -23,13 +27,17 @@ sealed interface NavigationAction : Action {
 
 fun navigationReducer(state: NavigationState, action: Action): NavigationState =
     when (action) {
-        is NavigationAction ->when (action) {
+        is NavigationAction -> when (action) {
             NavigationAction.Back -> when (state.currentScreen) {
-                Screen.Settings -> state.copy(currentScreen = Screen.Chat, handleBackButton = false)
+                Screen.Settings -> state.copy(currentScreen = Screen.Chat)
                 Screen.Chat -> state
             }
-            NavigationAction.OpenSettings -> state.copy(currentScreen = Screen.Settings, handleBackButton = true)
-            NavigationAction.OpenChat -> state.copy(currentScreen = Screen.Chat, handleBackButton = true)
+            NavigationAction.OpenSettings -> state.copy(
+                currentScreen = Screen.Settings
+            )
+            NavigationAction.OpenChat -> state.copy(
+                currentScreen = Screen.Chat
+            )
         }
         else -> state
     }
