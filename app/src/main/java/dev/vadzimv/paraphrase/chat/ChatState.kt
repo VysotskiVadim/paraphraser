@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.chatscreen
+package dev.vadzimv.paraphrase.chat
 
 import dev.vadzimv.paraphrase.AppState
 

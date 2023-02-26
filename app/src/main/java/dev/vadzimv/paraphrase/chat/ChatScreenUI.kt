@@ -1,4 +1,4 @@
-package dev.vadzimv.paraphrase.chatscreen
+package dev.vadzimv.paraphrase.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

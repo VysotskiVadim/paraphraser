@@ -1,8 +1,8 @@
 package dev.vadzimv.paraphrase
 
-import dev.vadzimv.paraphrase.chatscreen.ChatItem
-import dev.vadzimv.paraphrase.chatscreen.ChatScreenActions
-import dev.vadzimv.paraphrase.chatscreen.getChatScreenState
+import dev.vadzimv.paraphrase.chat.ChatItem
+import dev.vadzimv.paraphrase.chat.ChatScreenActions
+import dev.vadzimv.paraphrase.chat.getChatScreenState
 import dev.vadzimv.paraphrase.doubles.StubChat
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals

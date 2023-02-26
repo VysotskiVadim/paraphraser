@@ -1,9 +1,9 @@
 package dev.vadzimv.paraphrase
 
-import dev.vadzimv.paraphrase.chatscreen.ChatScreenState
-import dev.vadzimv.paraphrase.chatscreen.chatScreenReducer
-import dev.vadzimv.paraphrase.chatscreen.createChatScreenMiddleware
-import dev.vadzimv.paraphrase.chatscreen.createDefaultChatScreenState
+import dev.vadzimv.paraphrase.chat.ChatScreenState
+import dev.vadzimv.paraphrase.chat.chatScreenReducer
+import dev.vadzimv.paraphrase.chat.createChatScreenMiddleware
+import dev.vadzimv.paraphrase.chat.createDefaultChatScreenState
 import dev.vadzimv.paraphrase.navigation.NavigationState
 import dev.vadzimv.paraphrase.navigation.createNavigationInitialState
 import dev.vadzimv.paraphrase.navigation.navigationReducer
